@@ -1,52 +1,71 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
+import onboardingData from '../onboarding.json';
+import PersonalizingView from '../components/PersonalizingView';
+import WelcomeView from '../components/WelcomeView';
+import QuestionnaireView from '../components/QuestionnaireView';
 
 const Onboarding = () => {
   const router = useRouter();
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [isPersonalizing, setIsPersonalizing] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
+
+  const currentQuestion = onboardingData[currentQuestionIndex];
+
+  const handleOptionSelect = (option) => {
+    setSelectedAnswers((prev) => {
+      const existingAnswers = prev[currentQuestion.id] || [];
+      if (currentQuestion.questionType === 'single choice') {
+        return { ...prev, [currentQuestion.id]: [option] };
+      } else {
+        if (existingAnswers.includes(option)) {
+          return { ...prev, [currentQuestion.id]: existingAnswers.filter((item) => item !== option) };
+        } else {
+          return { ...prev, [currentQuestion.id]: [...existingAnswers, option] };
+        }
+      }
+    });
+  };
+
+  const handleContinue = () => {
+    if (!isContinueDisabled) {
+      if (currentQuestionIndex < onboardingData.length - 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      } else {
+        setIsPersonalizing(true);
+      }
+    }
+  };
+
+  const onPersonalizationComplete = () => {
+    router.replace('/(tabs)/home');
+  };
+
+  const isLastQuestion = currentQuestionIndex === onboardingData.length - 1;
+  const hasSelectedAnswer = selectedAnswers[currentQuestion.id]?.length > 0;
+  const isContinueDisabled = !hasSelectedAnswer;
+
+  if (showWelcome) {
+    return <WelcomeView onContinue={() => setShowWelcome(false)} />;
+  }
+
+  if (isPersonalizing) {
+    return <PersonalizingView onComplete={onPersonalizationComplete} />;
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Adura</Text>
-      <Text style={styles.subtitle}>Your companion for prayer and stories.</Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.replace('/(tabs)/home')}>
-        <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
-    </View>
+    <QuestionnaireView
+      currentQuestion={currentQuestion}
+      selectedAnswers={selectedAnswers}
+      handleOptionSelect={handleOptionSelect}
+      handleContinue={handleContinue}
+      isContinueDisabled={isContinueDisabled}
+      isLastQuestion={isLastQuestion}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0E1621',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#E6EAF0',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#A1ACB8',
-    marginBottom: 40,
-    textAlign: 'center',
-    paddingHorizontal: 20,
-  },
-  button: {
-    backgroundColor: '#D4AF37',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 14,
-  },
-  buttonText: {
-    color: '#0E1621',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
 
 export default Onboarding;

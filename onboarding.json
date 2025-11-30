@@ -141,13 +141,5 @@
       "Personal growth goals"
     ],
     "questionRelevance": "Helps personalise retention strategy"
-  },
-  {
-    "id": 12,
-    "questionType": "single choice",
-    "question": "Would you like to unlock all premium features with a subscription?",
-    "helperQuestion": "Choose an option",
-    "questionOptions": ["Yes, show me premium", "Maybe later", "No thanks"],
-    "questionRelevance": "Gauge interest in upgrading to a premium plan for full access"
   }
 ]
