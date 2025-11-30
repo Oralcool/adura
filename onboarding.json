@@ -1,0 +1,153 @@
+[
+  {
+    "id": 1,
+    "questionType": "multiple choice",
+    "question": "What are your goals for using this prayer app? (Select all that apply)",
+    "helperQuestion": "Choose all that apply",
+    "questionOptions": [
+      "Grow my faith / spiritual well-being",
+      "Reduce stress or anxiety",
+      "Improve my sleep",
+      "Strengthen relationships (marriage, family, friendship)",
+      "Find hope & happiness",
+      "Other"
+    ],
+    "questionRelevance": "Asking about goals helps personalize content; for example, Calm’s onboarding asks about stress or sleep goals and many users use spiritual apps for well-being"
+  },
+  {
+    "id": 2,
+    "questionType": "single choice",
+    "question": "How would you describe your current spiritual journey?",
+    "helperQuestion": "Pick one option",
+    "questionOptions": [
+      "Just exploring faith",
+      "Growing and learning",
+      "Strong and consistent",
+      "Rekindling my faith",
+      "Prefer not to say"
+    ],
+    "questionRelevance": "Helps tailor content intensity and guidance level"
+  },
+  {
+    "id": 3,
+    "questionType": "multiple choice",
+    "question": "Which prayer topics are you most interested in? (Select all that apply)",
+    "helperQuestion": "Choose all relevant topics",
+    "questionOptions": [
+      "Love & Kindness",
+      "Hope & Happiness",
+      "Overcoming Anxiety, Depression, Fear & Anger",
+      "Better Sleep & Relaxation",
+      "Marriage & Relationships",
+      "Parenting",
+      "Friendship",
+      "Tranquility & Peace",
+      "Leadership",
+      "Financial Provision & Management",
+      "Grief & Loss Healing",
+      "Forgiveness"
+    ],
+    "questionRelevance": "Aligns content with user needs; e.g. faith apps target anxiety and depression which are common issues"
+  },
+  {
+    "id": 4,
+    "questionType": "single choice",
+    "question": "How long would you like your typical prayer or meditation session to be?",
+    "helperQuestion": "Pick your preferred duration",
+    "questionOptions": [
+      "3 - 5 minutes",
+      "5 - 10 minutes",
+      "10 - 20 minutes",
+      "20+ minutes"
+    ],
+    "questionRelevance": "Optimizes content length for user attention and routine"
+  },
+  {
+    "id": 5,
+    "questionType": "single choice",
+    "question": "How often do you currently pray or engage in spiritual practice?",
+    "helperQuestion": "Pick one option",
+    "questionOptions": [
+      "Multiple times a day",
+      "Daily",
+      "A few times a week",
+      "Occasionally / weekly",
+      "Rarely / never"
+    ],
+    "questionRelevance": "Personalized onboarding that asks about habits boosts engagement"
+  },
+  {
+    "id": 6,
+    "questionType": "single choice",
+    "question": "Would you like guidance or structure for building a consistent prayer routine?",
+    "helperQuestion": "Select one",
+    "questionOptions": [
+      "Yes, guide me step-by-step",
+      "Some guidance would help",
+      "No, I prefer self-guided"
+    ],
+    "questionRelevance": "Determines level of coaching and structure needed"
+  },
+  {
+    "id": 7,
+    "questionType": "single choice",
+    "question": "Do you have children for whom you'd like bedtime Bible stories?",
+    "helperQuestion": "Yes or No",
+    "questionOptions": ["Yes", "No"],
+    "questionRelevance": "Identifies parents; the app includes kids’ Bible story features"
+  },
+  {
+    "id": 8,
+    "questionType": "single choice",
+    "question": "What type of voice do you prefer for prayers and stories?",
+    "helperQuestion": "Select one",
+    "questionOptions": [
+      "Male voice",
+      "Female voice",
+      "No preference"
+    ],
+    "questionRelevance": "Improves listening comfort and emotional connection"
+  },
+  {
+    "id": 9,
+    "questionType": "multiple choice",
+    "question": "When would you prefer to receive daily prayers or reminders? (Select all that apply)",
+    "helperQuestion": "Select preferred times",
+    "questionOptions": ["Morning", "Afternoon", "Evening", "Night/Before bed"],
+    "questionRelevance": "Allows scheduling of daily prayers and reminders"
+  },
+  {
+    "id": 10,
+    "questionType": "single choice",
+    "question": "How often would you like to receive spiritual notifications?",
+    "helperQuestion": "Pick one",
+    "questionOptions": [
+      "Once a day",
+      "2-3 times a day",
+      "Only on selected days",
+      "No notifications"
+    ],
+    "questionRelevance": "Controls engagement without overwhelming users"
+  },
+  {
+    "id": 11,
+    "questionType": "single choice",
+    "question": "What motivates you most to stay consistent?",
+    "helperQuestion": "Choose one",
+    "questionOptions": [
+      "Daily streaks & progress tracking",
+      "Encouraging scriptures & affirmations",
+      "Gentle reminders",
+      "Personal growth goals"
+    ],
+    "questionRelevance": "Helps personalise retention strategy"
+  },
+  {
+    "id": 12,
+    "questionType": "single choice",
+    "question": "Would you like to unlock all premium features with a subscription?",
+    "helperQuestion": "Choose an option",
+    "questionOptions": ["Yes, show me premium", "Maybe later", "No thanks"],
+    "questionRelevance": "Gauge interest in upgrading to a premium plan for full access"
+  }
+]
