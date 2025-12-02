@@ -43,7 +43,9 @@ const PersonalizingView = React.memo(({ onComplete }) => {
             )
           }
         </AnimatedCircularProgress>
-        <Text style={styles.personalizingText}>Personalizing your experience...</Text>
+        <Text style={styles.personalizingText}>
+          {isAnimationComplete ? "Personalization completed" : "Personalizing your experience..."}
+        </Text>
       </View>
       <View style={styles.navigation}>
         {isAnimationComplete && (

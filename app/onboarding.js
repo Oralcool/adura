@@ -41,7 +41,7 @@ const Onboarding = () => {
   };
 
   const onPersonalizationComplete = () => {
-    router.replace('/(tabs)/home');
+    router.push('/paywall');
   };
 
   const isLastQuestion = currentQuestionIndex === onboardingData.length - 1;
