@@ -11,6 +11,7 @@ const RootLayout = () => {
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="paywall" />
+        <Stack.Screen name="prayer" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
     </AuthProvider>
   );

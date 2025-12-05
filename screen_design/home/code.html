@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Prayer and Meditation App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Lora:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d4af37", // Soft Gold
+                        "background-light": "#0A192F", // Deep Midnight Blue (used for dark as per request)
+                        "background-dark": "#0A192F", // Deep Midnight Blue
+                        "card-background": "#1B2E4B", // Charcoal Blue
+                        "surface-elevated": "#304A6E", // Soft Slate
+                        "text-primary": "#E0E0E0", // Off-white
+                        "text-secondary": "#A0AEC0", // Light Grey
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "serif": ["Lora", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/css">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill-1 {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-text-primary">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden pb-24">
+<!-- Top App Bar -->
+<div class="flex items-center p-4 pb-2 justify-between">
+<h1 class="text-white text-2xl font-bold leading-tight tracking-[-0.015em] flex-1 font-serif">Good Morning, Adeyinka</h1>
+<div class="text-white flex size-12 shrink-0 items-center justify-end" data-icon="Notifications" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined text-3xl">notifications</span>
+</div>
+</div>
+<!-- Spacer -->
+<div class="h-4"></div>
+<!-- Hero Card: Today's Prayer -->
+<div class="p-4 pt-0">
+<div class="bg-cover bg-center flex flex-col items-stretch justify-end rounded-xl pt-[220px] bg-card-background" data-alt="Abstract image of gentle light rays filtering through a calm, dark blue atmosphere" style='background-image: linear-gradient(0deg, rgba(27, 46, 75, 0.8) 0%, rgba(27, 46, 75, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1SwHPWDUL_rH0PAgyKyJc0X8v-W-s8bzraR0jeSs0g9AY5rZnL1Oez5MlB37O0tFXMhLb09UPlw2e7e9VJjz0yPEVA5cWZ9RBhlPqS50iW3AwEC1R_sCsh8pFD_ct-CJkfKiybFzU-8AROZQvwNOxqy7hLYb5H929EfCvz2UQYICFbj29MPFFSioeVUBRIpMehvBg5bHbYZrB83dVhok9mcUfKefo09Y2PvlC7tmMgLaMedWHbQKsphDFBV6pzIZs0IoQFGWLCRXt");'>
+<div class="flex w-full flex-col md:flex-row items-start md:items-end justify-between gap-4 p-4">
+<div class="flex max-w-[440px] flex-1 flex-col gap-1">
+<p class="text-white text-2xl font-bold leading-tight max-w-[440px] font-serif">Today's Prayer: A Moment of Gratitude</p>
+<p class="text-text-secondary text-base font-medium leading-normal">Find peace and thankfulness in this guided prayer.</p>
+</div>
+<button class="flex w-full md:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Begin Prayer</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Section Header: Quick Access -->
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4 font-serif">Quick Access</h2>
+<!-- Image Grid (Modified to Icon-based Navigation Cards) -->
+<div class="grid grid-cols-3 gap-3 p-4 pt-2">
+<div class="flex flex-col items-center gap-3 rounded-lg bg-card-background p-4 text-center">
+<div class="flex items-center justify-center size-16 bg-surface-elevated rounded-full">
+<span class="material-symbols-outlined text-primary text-3xl">self_improvement</span>
+</div>
+<p class="text-text-primary text-sm font-semibold leading-normal">Meditations</p>
+</div>
+<div class="flex flex-col items-center gap-3 rounded-lg bg-card-background p-4 text-center">
+<div class="flex items-center justify-center size-16 bg-surface-elevated rounded-full">
+<span class="material-symbols-outlined text-primary text-3xl">dark_mode</span>
+</div>
+<p class="text-text-primary text-sm font-semibold leading-normal">Bedtime Stories</p>
+</div>
+<div class="flex flex-col items-center gap-3 rounded-lg bg-card-background p-4 text-center">
+<div class="flex items-center justify-center size-16 bg-surface-elevated rounded-full">
+<span class="material-symbols-outlined text-primary text-3xl">forum</span>
+</div>
+<p class="text-text-primary text-sm font-semibold leading-normal">Prayer Topics</p>
+</div>
+</div>
+<!-- Section Header: Verse of the Day -->
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4 font-serif">Verse of the Day</h2>
+<!-- Quote Card for Verse of the Day -->
+<div class="px-4">
+<div class="bg-card-background rounded-lg p-6">
+<p class="font-serif text-lg leading-relaxed text-text-primary">"The Lord is my shepherd; I shall not want."</p>
+<p class="mt-3 text-right font-display text-sm font-medium text-primary">Psalm 23:1</p>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 h-20 bg-card-background/80 backdrop-blur-lg border-t border-surface-elevated/50">
+<div class="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
+<button class="inline-flex flex-col items-center justify-center px-5 group" type="button">
+<div class="flex items-center justify-center h-8 w-16 rounded-full bg-surface-elevated">
+<span class="material-symbols-outlined fill-1 text-primary">home</span>
+</div>
+<span class="text-sm text-primary">Home</span>
+</button>
+<button class="inline-flex flex-col items-center justify-center px-5 group" type="button">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary">explore</span>
+<span class="text-sm text-text-secondary group-hover:text-primary">Discover</span>
+</button>
+<button class="inline-flex flex-col items-center justify-center px-5 group" type="button">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary">library_books</span>
+<span class="text-sm text-text-secondary group-hover:text-primary">Library</span>
+</button>
+<button class="inline-flex flex-col items-center justify-center px-5 group" type="button">
+<span class="material-symbols-outlined text-text-secondary group-hover:text-primary">person</span>
+<span class="text-sm text-text-secondary group-hover:text-primary">Profile</span>
+</button>
+</div>
+</div>
+</body></html>

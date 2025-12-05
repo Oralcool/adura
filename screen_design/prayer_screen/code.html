@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Morning Prayer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&amp;family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .font-serif-display { font-family: 'Lora', serif; }
+        .font-sans-ui { font-family: 'Nunito Sans', sans-serif; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#F4D160", // Soft Gold
+                        "background-light": "#f8f8f6", // Keeping a light mode fallback
+                        "background-dark": "#000B29", // Deep Midnight Blue
+                        "card-dark": "#394867", // Charcoal Blue
+                        "text-light": "#F1F6F9" // Off-white/light cream
+                    },
+                    fontFamily: {
+                        "display": ["Nunito Sans", "sans-serif"], // Default UI Font
+                        "serif": ["Lora", "serif"] // Prayer/Heading Font
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem", // A bit softer than default
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-sans-ui">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden text-text-light pb-32">
+<!-- Top App Bar -->
+<div class="flex items-center bg-background-dark/80 backdrop-blur-sm p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-text-light" style="font-size: 28px;">arrow_back</span>
+</div>
+<h1 class="text-text-light text-xl font-bold leading-tight tracking-[-0.015em] flex-1 text-center font-serif-display">Morning Prayer</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-transparent text-text-light gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0 hover:bg-white/10">
+<span class="material-symbols-outlined text-text-light" style="font-size: 24px;">ios_share</span>
+</button>
+</div>
+</div>
+<!-- Hero Section -->
+<div class="@container">
+<div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end min-h-64" data-alt="Golden sunrise over a tranquil, misty mountain range." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBO1fGn1ZnBB6N9TfGlcu0N4RxL7-Z1dIMw-JkwroYUCrRcFcZ_1m2IlExbVqenTRfvx2Vw5q7gwtDBWwfeSuatBPOHiTz22ptbbb3Ni_rW_QIna19fPKM174J3vrYWXCjAj23atvhEykIeR2G2cZjArPTA3mAjyhfz0UahllenwWT0g38FH9iIxeaHdZwHS0jxYsXn6Z_ALtgry7FsZq67BA2784g01uOOm91MEDy4xx7I9MIByKhtrHMWejjTPvtiG3FaNEkZ4_Cf");'>
+<div class="h-24 bg-gradient-to-t from-background-dark to-transparent"></div>
+</div>
+</div>
+<div class="flex flex-col gap-6 px-4 -mt-16">
+<!-- Scripture Card -->
+<div class="flex flex-col items-stretch justify-start gap-1 rounded-lg bg-card-dark p-6 shadow-lg">
+<p class="text-primary text-sm font-bold leading-normal tracking-wide font-sans-ui">PSALM 118:24</p>
+<p class="text-text-light text-xl font-normal leading-relaxed tracking-[-0.015em] font-serif-display">This is the day the Lord has made; let us rejoice and be glad in it.</p>
+</div>
+<!-- Prayer Text Area -->
+<div class="flex flex-col gap-4">
+<p class="text-text-light/90 text-lg font-normal leading-loose font-serif-display">
+                    Heavenly Father, as the sun rises, so does our gratitude for a new day. Thank you for the gift of life, for the peace that surpasses understanding, and for your guiding light.
+                </p>
+<p class="text-text-light/90 text-lg font-normal leading-loose font-serif-display">
+                    We ask for your wisdom to navigate the challenges ahead and your strength to walk in your ways. May our hearts be filled with your love, our minds with your truth, and our actions with your grace. Amen.
+                </p>
+</div>
+<!-- Audio Selection Card -->
+<div class="flex flex-col items-stretch justify-start rounded-xl bg-card-dark p-5 gap-4 shadow-lg border border-white/10">
+<p class="text-text-light text-lg font-bold leading-tight font-serif-display">Background Audio</p>
+<div class="grid grid-cols-3 gap-3 text-center">
+<!-- Selected Option -->
+<div class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-primary/20 border border-primary text-primary">
+<span class="material-symbols-outlined" style="font-size: 28px;">music_note</span>
+<span class="text-sm font-semibold font-sans-ui">Calm Music</span>
+</div>
+<!-- Other Options -->
+<div class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-transparent text-text-light/70 hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 28px;">forest</span>
+<span class="text-sm font-semibold font-sans-ui">Nature</span>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 p-3 rounded-lg bg-transparent text-text-light/70 hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 28px;">volume_off</span>
+<span class="text-sm font-semibold font-sans-ui">Silence</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Button Bar (Footer) -->
+<div class="fixed bottom-0 left-0 right-0 z-10 bg-background-dark/80 backdrop-blur-sm p-4 border-t border-white/10">
+<div class="flex items-center gap-4">
+<button class="flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-primary text-primary transition-colors hover:bg-primary/10">
+<span class="material-symbols-outlined" style="font-size: 28px;">favorite_border</span>
+</button>
+<button class="flex h-14 flex-grow cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary text-background-dark gap-2 text-lg font-bold leading-normal transition-opacity hover:opacity-90">
+                    Mark as Complete
+                </button>
+</div>
+</div>
+</div>
+</body></html>
