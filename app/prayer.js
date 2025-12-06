@@ -65,14 +65,14 @@ import {
         </ScrollView>
 
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.favoriteButton}>
-            <MaterialIcons name="favorite-border" size={28} color={COLORS.textPrimary} />
+          <TouchableOpacity style={styles.volumeButton}>
+            <MaterialIcons name="volume-off" size={28} color={COLORS.textPrimary} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.completeButton}>
             <Text style={styles.completeButtonText}>Mark as Complete</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.volumeButton}>
-            <MaterialIcons name="volume-off" size={28} color={COLORS.textPrimary} />
+          <TouchableOpacity style={styles.favoriteButton}>
+            <MaterialIcons name="favorite-border" size={28} color={COLORS.textPrimary} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -99,13 +99,11 @@ import {
       zIndex: 10,
       backgroundColor: COLORS.primaryBg,
     },
-    headerText: {
-      color: COLORS.textPrimary,
-      fontSize: 20,
-      fontWeight: 'bold',
-      fontFamily: 'serif',
-    },
-    heroImage: {
+      headerText: {
+        color: COLORS.textPrimary,
+        fontSize: 20,
+        fontWeight: 'bold',
+      },    heroImage: {
       width: '100%',
       height: 300,
       justifyContent: 'flex-end',
@@ -131,22 +129,18 @@ import {
       fontWeight: 'bold',
       marginBottom: 4,
     },
-    scriptureText: {
-      color: COLORS.textPrimary,
-      fontSize: 20,
-      fontFamily: 'serif',
-    },
-    prayerTextContainer: {
+      scriptureText: {
+        color: COLORS.textPrimary,
+        fontSize: 20,
+      },    prayerTextContainer: {
       gap: 16,
       marginBottom: 24,
     },
-    prayerText: {
-      color: COLORS.textPrimary,
-      fontSize: 18,
-      lineHeight: 28,
-      fontFamily: 'serif',
-    },
-    footer: {
+      prayerText: {
+        color: COLORS.textPrimary,
+        fontSize: 18,
+        lineHeight: 28,
+      },    footer: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 16,

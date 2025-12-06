@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bedtime Bible Stories</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#edbc1d",
+              "background-light": "#f8f8f6",
+              "background-dark": "#221e10",
+              // Custom colors based on user request
+              "deep-midnight-blue": "#0B192F",
+              "charcoal-blue": "#36454F",
+              "soft-slate": "#737C8C",
+              "soft-gold": "#C4A484",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "1.25rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-deep-midnight-blue group/design-root overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-10 flex items-center bg-background-light dark:bg-deep-midnight-blue p-4 pb-2 justify-between">
+<div class="text-slate-700 dark:text-white flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Bedtime Stories</h2>
+<div class="flex size-12 shrink-0 items-center"></div> <!-- Spacer for centering title -->
+</div>
+<!-- Search Bar -->
+<div class="px-4 py-3">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-slate-400 dark:text-soft-slate flex bg-slate-100 dark:bg-charcoal-blue items-center justify-center pl-4 rounded-l-lg">
+<span class="material-symbols-outlined text-2xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-0 border-none bg-slate-100 dark:bg-charcoal-blue h-full placeholder:text-slate-400 dark:placeholder:text-soft-slate px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search for a story..." value=""/>
+</div>
+</label>
+</div>
+<!-- Chips -->
+<div class="flex gap-3 px-4 py-3 overflow-x-auto whitespace-nowrap">
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-soft-slate px-5">
+<p class="text-white text-sm font-semibold leading-normal">All</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-charcoal-blue px-5">
+<p class="text-slate-700 dark:text-white text-sm font-medium leading-normal">Old Testament</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-charcoal-blue px-5">
+<p class="text-slate-700 dark:text-white text-sm font-medium leading-normal">Jesus' Teachings</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-charcoal-blue px-5">
+<p class="text-slate-700 dark:text-white text-sm font-medium leading-normal">Prophets</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-charcoal-blue px-5">
+<p class="text-slate-700 dark:text-white text-sm font-medium leading-normal">Calm</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-charcoal-blue px-5">
+<p class="text-slate-700 dark:text-white text-sm font-medium leading-normal">Sleep</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-charcoal-blue px-5">
+<p class="text-slate-700 dark:text-white text-sm font-medium leading-normal">Kids</p>
+</div>
+</div>
+<!-- Image Grid -->
+<div class="grid grid-cols-2 gap-4 p-4">
+<!-- Story Card 1 -->
+<div class="flex flex-col gap-3 rounded-lg bg-slate-100 dark:bg-charcoal-blue overflow-hidden">
+<div class="relative bg-cover bg-center aspect-[1/1]" data-alt="A serene illustration of a person helping another on a dusty road, representing the Good Samaritan." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD_XHV0SRzTNsscbeKuCEsnC_RtQsYMNYLCLk3EhcNf25Uj5DeFOua25KUsmUid4rPJ-td-H92XsE4jJ5OeBpAfdRLF5worTPk93VNtPR87y7ZR-g_wO0pcNe9MnCBKzz8jf044DlvSHppruzGJvVvVYY4sEWDrecHcdh5lropYssfbYVHCHaLrV2Vs_qzEiyUA60t5Voi55oB_-w5WZqLV1_DcaY9bGgvwLqQ2Jpc3SEsbGgWyPkOrAPkHuNXDn32yI4BvAd691nkd");'>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="absolute bottom-2 right-2 flex size-10 items-center justify-center rounded-full bg-soft-gold/90 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-2xl !font-light" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="p-3 pt-0">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">The Good Samaritan</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-500 dark:text-soft-slate">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<p class="text-sm font-medium">15 min</p>
+</div>
+</div>
+</div>
+<!-- Story Card 2 -->
+<div class="flex flex-col gap-3 rounded-lg bg-slate-100 dark:bg-charcoal-blue overflow-hidden">
+<div class="relative bg-cover bg-center aspect-[1/1]" data-alt="A dramatic image of a small boy with a sling facing a giant, representing David and Goliath." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC2YKeiW_nxD-Pu7gyhsQJTrlYNgBOjIzLsJJZhUtb2L5fvBLq8ZaEwjfB8WbM-p7HGsr2HZKNTeLHz6D4ilgWIE_WW3B4wl3d8B1JIr8xRpeHTZlmGFzsVORgHb-kGChfkCsrxpWhw9Vt8ph-e1IEKQRTq3qd52dQ8A3G67nEJP17kqCa5xQuuzvHFOYeQ5vYXWzhR3Hpf5Zwi2ccDixizgHVSvcPsNENnuQe77jR8wmEuYtJaHUsrtQa1IJylnPzwb0y-R_kt0eWj");'>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="absolute bottom-2 right-2 flex size-10 items-center justify-center rounded-full bg-soft-gold/90 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-2xl !font-light" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="p-3 pt-0">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">David and Goliath</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-500 dark:text-soft-slate">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<p class="text-sm font-medium">12 min</p>
+</div>
+</div>
+</div>
+<!-- Story Card 3 -->
+<div class="flex flex-col gap-3 rounded-lg bg-slate-100 dark:bg-charcoal-blue overflow-hidden">
+<div class="relative bg-cover bg-center aspect-[1/1]" data-alt="A beautiful depiction of the universe and stars, symbolizing the story of Creation." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDn7YyX53p75wkK-vRcyrDabmBVW9dZLR8W2x1WP7gUa5VWubHGjYSaArzBpKErrzl17GosfPGWhr9qqd-UvhIGPX2zzF2bd-8jC8BYG4IZd65obr6FRukf23MgybGiD3PZNBoPeDamcHHy28DAaHLZmtzW2UeoCdb09q251tkB-FMfEPoQSejz9ssL-d1sFbgF7rcWIr0T9jJIUa2huMH5NsjSkkt1YD_WTNmyh0xRy7iJdSr-KN-AX1VgPJ5eYzdjLBAOjCMqLy3d");'>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="absolute bottom-2 right-2 flex size-10 items-center justify-center rounded-full bg-soft-gold/90 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-2xl !font-light" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="p-3 pt-0">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">The Creation</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-500 dark:text-soft-slate">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<p class="text-sm font-medium">20 min</p>
+</div>
+</div>
+</div>
+<!-- Story Card 4 -->
+<div class="flex flex-col gap-3 rounded-lg bg-slate-100 dark:bg-charcoal-blue overflow-hidden">
+<div class="relative bg-cover bg-center aspect-[1/1]" data-alt="An image of a man peacefully surrounded by lions in a den, for Daniel in the Lion's Den." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDXfM_9erAUPZLERrsVnu_s1XFy19lCEyY44NeicKwbq8HOdgtxUXh5MisJzi9QuEVjXNBudmEnOfm-XMnlUM5mDTJa6cVwWLxZHWP6uLAV16OITQKibOxzCzSSucj7b7-2sUrxZtK_pK4NUQgPXahKDYZ--R5n76tkXeW6Hnj3bphCv1rbUlVSHT0EADSSPubKEmV5_GjAM5SZz2WdL0CSRxPy951Nng5Gk_fFVAllVZCJZIS9L2ANrbTsgmCSLXeJhfzPA8d-C_G0");'>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="absolute bottom-2 right-2 flex size-10 items-center justify-center rounded-full bg-soft-gold/90 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-2xl !font-light" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="p-3 pt-0">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Daniel in the Lion's Den</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-500 dark:text-soft-slate">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<p class="text-sm font-medium">18 min</p>
+</div>
+</div>
+</div>
+<!-- Story Card 5 -->
+<div class="flex flex-col gap-3 rounded-lg bg-slate-100 dark:bg-charcoal-blue overflow-hidden">
+<div class="relative bg-cover bg-center aspect-[1/1]" data-alt="A heartwarming scene of a father embracing his returning son, for The Prodigal Son." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDGQPujiMucgSOVAAfKv_02V_Hw3bOOVwPzOe7815xV9H34cDGEkG2bZqoH08S8Q4WFp_kitO2iiSadlubdy0_iHHpdD_V4fv8Y2fi8bGBYJAKyjiPiIHJUmN0C2AJgpgS_JWBBAnxtaktTt7uZJJsfjhYQPSe02dboHu11FFOhQVyw9JdSp2XXE3Pde07LcofTZwR2mmigsKybDrEkBCKX7fOf65t-M9pOWApsqHXezu5eH6IyCBTMpInCVoE6UoM_zNGUggixYJiA");'>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="absolute bottom-2 right-2 flex size-10 items-center justify-center rounded-full bg-soft-gold/90 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-2xl !font-light" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="p-3 pt-0">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">The Prodigal Son</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-500 dark:text-soft-slate">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<p class="text-sm font-medium">14 min</p>
+</div>
+</div>
+</div>
+<!-- Story Card 6 -->
+<div class="flex flex-col gap-3 rounded-lg bg-slate-100 dark:bg-charcoal-blue overflow-hidden">
+<div class="relative bg-cover bg-center aspect-[1/1]" data-alt="A majestic wooden ark on the water with animals, representing Noah's Ark." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAQEkoynPq6ZX4osbB-xfsV32k-N1zcEYwVszTts4xBWPy9EfsOTkCkObKR8ZremDHi5hoDevgW3-WQzRfOXz_YzEcu1MEo1uHrRL7dlARtf3vUgOpGlW-23F4NZZNA2LrbQi2YAJU9jb2dfGlx8rGlxeDxg8EJQbCLMAkcmG-hgkY1VEjSV2A5McOEJoejiEEI-1CUSRTe49N3DpLYxI9knXA2jUEZrQKEUOi3FUjiVQtQ2DSLe2wc2UN6vTp9mcxsYO4ghcqO-8SJ");'>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="absolute bottom-2 right-2 flex size-10 items-center justify-center rounded-full bg-soft-gold/90 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-2xl !font-light" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="p-3 pt-0">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Noah's Ark</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-500 dark:text-soft-slate">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<p class="text-sm font-medium">25 min</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

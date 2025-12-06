@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 24,
     fontWeight: 'bold',
-    fontFamily: 'serif',
   },
   cardContainer: {
     paddingHorizontal: 16,
@@ -125,7 +124,6 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 24,
     fontWeight: 'bold',
-    fontFamily: 'serif',
     maxWidth: 440,
   },
   heroSubtitle: {
@@ -150,7 +148,6 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 20,
     fontWeight: 'bold',
-    fontFamily: 'serif',
     paddingHorizontal: 16,
     paddingBottom: 8,
     paddingTop: 16,
@@ -191,7 +188,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   verseText: {
-    fontFamily: 'serif',
     fontSize: 18,
     lineHeight: 28,
     color: COLORS.textPrimary,
@@ -199,7 +195,6 @@ const styles = StyleSheet.create({
   verseReference: {
     marginTop: 12,
     textAlign: 'right',
-    fontFamily: 'sans-serif',
     fontSize: 14,
     fontWeight: '500',
     color: COLORS.primaryAccent,
