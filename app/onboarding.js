@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import onboardingData from '../onboarding.json';
 import PersonalizingView from '../components/PersonalizingView';
 import WelcomeView from '../components/WelcomeView';
@@ -40,8 +41,15 @@ const Onboarding = () => {
     }
   };
 
-  const onPersonalizationComplete = () => {
-    router.push('/paywall');
+  const onPersonalizationComplete = async () => {
+    try {
+      await AsyncStorage.setItem('onboardingComplete', 'true');
+      router.push('/paywall');
+    } catch (e) {
+      console.error('Failed to save onboarding status.', e);
+      // Still navigate, but log the error
+      router.push('/paywall');
+    }
   };
 
   const isLastQuestion = currentQuestionIndex === onboardingData.length - 1;
