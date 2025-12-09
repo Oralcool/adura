@@ -3,22 +3,21 @@ import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import Slider from '@react-native-community/slider';
 import COLORS from '../constants/colors';
+import { useAudio } from '../context/AudioProvider';
 
 const PlayerScreen = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
-
-  const item = params;
-
-  const player = useAudioPlayer(item.audio);
-  const status = useAudioPlayerStatus(player);
+  const { status, player, loadTrack, currentTrack } = useAudio();
 
   useEffect(() => {
-    player.play();
-  }, [player]);
+    // If there's a track in the params and it's different from the current one, load it.
+    if (params.audio && params.audio !== currentTrack?.audio) {
+      loadTrack(params);
+    }
+  }, [params.audio]);
 
   const handlePlayPause = () => {
     if (status.playing) {
@@ -37,7 +36,24 @@ const PlayerScreen = () => {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const headerTitle = item.sourceScreen === 'stories' ? 'Bible Story' : 'Bedtime Story';
+  // If there's no current track, we can show a loading or empty state.
+  if (!currentTrack) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={28} color={COLORS.textPrimary} />
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={COLORS.accent} />
+          <Text style={{ color: COLORS.textPrimary, marginTop: 10 }}>Loading track...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const headerTitle = currentTrack.sourceScreen === 'stories' ? 'Bible Story' : 'Bedtime Story';
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -52,10 +68,10 @@ const PlayerScreen = () => {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <ImageBackground source={{ uri: item.image }} style={styles.mainImage} imageStyle={{ borderRadius: 12 }} />
+        <ImageBackground source={{ uri: currentTrack.image }} style={styles.mainImage} imageStyle={{ borderRadius: 12 }} />
 
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.subtitle}>{item.subtitle}</Text>
+        <Text style={styles.title}>{currentTrack.title}</Text>
+        <Text style={styles.subtitle}>{currentTrack.subtitle}</Text>
 
         <View style={styles.sliderWrapper}>
           <Slider
