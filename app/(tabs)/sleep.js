@@ -18,14 +18,16 @@ const sleepStories = [
     title: 'The Whispering River',
     duration: '25 min',
     image: 'https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    subtitle: 'Let the gentle sounds of the river guide you to sleep.'
+    subtitle: 'Let the gentle sounds of the river guide you to sleep.',
+    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
   },
   {
     id: '2',
     title: 'The Enchanted Forest',
     duration: '30 min',
     image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    subtitle: 'A magical journey through a forest of wonders.'
+    subtitle: 'A magical journey through a forest of wonders.',
+    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
   },
 ];
 
@@ -62,7 +64,7 @@ const SleepScreen = () => {
             <FlatList
                 data={sleepStories}
                 renderItem={({ item }) => (
-                    <Link href={{ pathname: "/player", params: { title: item.title, subtitle: item.subtitle, image: item.image, duration: item.duration, sourceScreen: 'sleep' } }} asChild>
+                    <Link href={{ pathname: "/player", params: { title: item.title, subtitle: item.subtitle, image: item.image, duration: item.duration, sourceScreen: 'sleep', audio: item.audio } }} asChild>
                         <TouchableOpacity>
                             <SleepStoryCard item={item} />
                         </TouchableOpacity>

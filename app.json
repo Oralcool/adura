@@ -25,7 +25,8 @@
       "package": "com.jossyoro01.adura"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-audio"
     ],
     "extra": {
       "router": {},

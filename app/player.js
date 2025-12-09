@@ -1,32 +1,40 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
+import Slider from '@react-native-community/slider';
 import COLORS from '../constants/colors';
-
-// This is a temporary slider simulation
-const Slider = () => (
-  <View style={styles.sliderContainer}>
-    <View style={styles.sliderTrack}>
-      <View style={styles.sliderProgress} />
-    </View>
-    <View style={styles.sliderThumb} />
-  </View>
-);
 
 const PlayerScreen = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  // Use dummy data if params are not available, for testing
-  const item = {
-    title: params.title || 'The Story of David',
-    subtitle: params.subtitle || 'A journey of faith, courage, and divine guidance.',
-    image: params.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuB_7oJslpLjjyaqNc5ELZAM4QjlHkEL-fEyfCPZb_WCpITcJebBKZ3eJShKIntyUJgaYpd_voN0tB0JgZNiuu7eKhbp0fIXoPcBNcG1HKxKBFLv_aE7xZ4ItsUDNYXaDVL5y_-x65g6c-AZqahnZjlta45OamAeR9mmr3gNs4vGCey7DBBWiJIBfLnyBZmNf7uOlFTH3f_9tTDa3IglP0J9cvYLI7HftCNekpx6r9EX9stod69CT-UsVC6ENM7ZotEs_2M8tWy87TWl',
-    duration: params.duration || '18:40',
-    audio: params.audio || 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    sourceScreen: params.sourceScreen || 'sleep', // Default to 'sleep' for "Bedtime Story"
+  const item = params;
+
+  const player = useAudioPlayer(item.audio);
+  const status = useAudioPlayerStatus(player);
+
+  useEffect(() => {
+    player.play();
+  }, [player]);
+
+  const handlePlayPause = () => {
+    if (status.playing) {
+      player.pause();
+    } else {
+      player.play();
+    }
+  };
+
+  const formatTime = (seconds) => {
+    if (isNaN(seconds) || seconds === null) {
+        return '00:00';
+    }
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   const headerTitle = item.sourceScreen === 'stories' ? 'Bible Story' : 'Bedtime Story';
@@ -50,22 +58,34 @@ const PlayerScreen = () => {
         <Text style={styles.subtitle}>{item.subtitle}</Text>
 
         <View style={styles.sliderWrapper}>
-          <Slider />
+          <Slider
+            style={styles.sliderContainer}
+            value={status.currentTime}
+            maximumValue={status.duration}
+            onSlidingComplete={(value) => player.seekTo(value)}
+            minimumTrackTintColor="#E4B47C"
+            maximumTrackTintColor="rgba(245, 245, 245, 0.2)"
+            thumbTintColor="white"
+          />
           <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>03:15</Text>
-            <Text style={styles.timeText}>{item.duration}</Text>
+            <Text style={styles.timeText}>{formatTime(status.currentTime)}</Text>
+            <Text style={styles.timeText}>{formatTime(status.duration)}</Text>
           </View>
         </View>
 
         <View style={styles.controlsContainer}>
-          <TouchableOpacity>
-            <Ionicons name="replay-10" size={36} color={COLORS.textPrimary} />
+          <TouchableOpacity onPress={() => player.seekTo(status.currentTime - 10)}>
+            <Ionicons name="play-back" size={36} color={COLORS.textPrimary} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.playPauseButton}>
-            <Ionicons name="pause" size={48} color={'#0B0724'} />
+          <TouchableOpacity style={styles.playPauseButton} onPress={handlePlayPause}>
+            {status.isBuffering ? (
+              <ActivityIndicator size="large" color={'#0B0724'} />
+            ) : (
+              <Ionicons name={status.playing ? 'pause' : 'play'} size={48} color={'#0B0724'} />
+            )}
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="forward-30" size={36} color={COLORS.textPrimary} />
+          <TouchableOpacity onPress={() => player.seekTo(status.currentTime + 30)}>
+            <Ionicons name="play-forward" size={36} color={COLORS.textPrimary} />
           </TouchableOpacity>
         </View>
 
@@ -142,33 +162,12 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   sliderContainer: {
-    height: 20,
-    justifyContent: 'center',
-  },
-  sliderTrack: {
-    height: 4,
-    backgroundColor: 'rgba(245, 245, 245, 0.2)',
-    borderRadius: 2,
-  },
-  sliderProgress: {
-    height: 4,
-    backgroundColor: '#E4B47C',
-    width: '17%',
-    borderRadius: 2,
-  },
-  sliderThumb: {
-    position: 'absolute',
-    left: '17%',
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: 'white',
-    marginLeft: -8,
+    height: 40,
   },
   timeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 8,
+    marginTop: -8, // Adjusted to align with slider visual
   },
   timeText: {
     color: 'rgba(245, 245, 245, 0.6)',
