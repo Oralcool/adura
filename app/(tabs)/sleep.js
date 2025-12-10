@@ -16,6 +16,7 @@ const sleepStories = [
   {
     id: '1',
     title: 'The Whispering River',
+    type: 'Bedtime Story',
     duration: '25 min',
     image: 'https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     subtitle: 'Let the gentle sounds of the river guide you to sleep.',
@@ -24,6 +25,7 @@ const sleepStories = [
   {
     id: '2',
     title: 'The Enchanted Forest',
+    type: 'Bedtime Story',
     duration: '30 min',
     image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     subtitle: 'A magical journey through a forest of wonders.',
@@ -31,7 +33,7 @@ const sleepStories = [
   },
 ];
 
-const SleepStoryCard = ({ item }) => (
+const SleepStoryCard = ({ item, onPress }) => (
     <View style={styles.card}>
         <ImageBackground
         source={{ uri: item.image }}
@@ -64,7 +66,7 @@ const SleepScreen = () => {
             <FlatList
                 data={sleepStories}
                 renderItem={({ item }) => (
-                    <Link href={{ pathname: "/player", params: { title: item.title, subtitle: item.subtitle, image: item.image, duration: item.duration, sourceScreen: 'sleep', audio: item.audio } }} asChild>
+                    <Link href={{ pathname: "/player", params: { title: item.title, subtitle: item.subtitle, image: item.image, duration: item.duration, type: item.type, audio: item.audio } }} asChild>
                         <TouchableOpacity>
                             <SleepStoryCard item={item} />
                         </TouchableOpacity>

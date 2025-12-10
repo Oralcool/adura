@@ -5,73 +5,194 @@ import {
   ScrollView,
   ImageBackground,
   TouchableOpacity,
+  FlatList,
   Platform,
   StatusBar,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import COLORS from '../../constants/colors';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import SuggestStoryModal from '../../components/SuggestStoryModal';
+
+const newReleases = [
+  {
+    id: '1',
+    title: 'The Good Samaritan',
+    type: 'Bible Story',
+    category: "Jesus' Teachings",
+    subtitle: 'A story of compassion and helping others in need',
+    duration: '15:00',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD_XHV0SRzTNsscbeKuCEsnC_RtQsYMNYLCLk3EhcNf25Uj5DeFOua25KUsmUid4rPJ-td-H92XsE4jJ5OeBpAfdRLF5worTPk93VNtPR87y7ZR-g_wO0pcNe9MnCBKzz8jf044DlvSHppruzGJvVvVYY4sEWDrecHcdh5lropYssfbYVHCHaLrV2Vs_qzEiyUA60t5Voi55oB_-w5WZqLV1_DcaY9bGgvwLqQ2Jpc3SEsbGgWyPkOrAPkHuNXDn32yI4BvAd691nkd',
+    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+  },
+  {
+    id: '2',
+    title: 'David and Goliath',
+    type: 'Bible Story',
+    category: 'Old Testament',
+    subtitle: 'A tale of courage and faith against all odds',
+    duration: '12:00',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuC2YKeiW_nxD-Pu7gyhsQJTrlYNgBOjIzLsJJZhUtb2L5fvBLq8ZaEwjfB8WbM-p7HGsr2HZKNTeLHz6D4ilgWIE_WW3B4wl3d8B1JIr8xRpeHTZlmGFzsVORgHb-kGChfkCsrxpWhw9Vt8ph-e1IEKQRTq3qd52dQ8A3G67nEJP17kqCa5xQuuzvHFOYeQ5vYXWzhR3Hpf5Zwi2ccDixizgHVSvcPsNENnuQe77jR8wmEuYtJaHUsrtQa1IJylnPzwb0y-R_kt0eWj',
+    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+  },
+  {
+    id: '3',
+    title: 'The Sleepy Shepherd',
+    type: 'Bedtime Story',
+    category: 'Sleep',
+    subtitle: "A calming tale about a shepherd under the stars.",
+    duration: '20:00',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDn7YyX53p75wkK-vRcyrDabmBVW9dZLR8W2x1WP7gUa5VWubHGjYSaArzBpKErrzl17GosfPGWhr9qqd-UvhIGPX2zzF2bd-8jC8BYG4IZd65obr6FRukf23MgybGiD3PZNBoPeDamcHHy28DAaHLZmtzW2UeoCdb09q251tkB-FMfEPoQSejz9ssL-d1sFbgF7rcWIr0T9jJIUa2huMH5NsjSkkt1YD_WTNmyh0xRy7iJdSr-KN-AX1VgPJ5eYzdjLBAOjCMqLy3d',
+    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+  },
+  {
+    id: '4',
+    title: "Daniel in the Lion's Den",
+    type: 'Bible Story',
+    category: 'Prophets',
+    subtitle: 'Faith and protection in the face of danger',
+    duration: '18:00',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDXfM_9erAUPZLERrsVnu_s1XFy19lCEyY44NeicKwbq8HOdgtxUXh5MisJzi9QuEVjXNBudmEnOfm-XMnlUM5mDTJa6cVwWLxZHWP6uLAV16OITQKibOxzCzSSucj7b7-2sUrxZtK_pK4NUQgPXahKDYZ--R5n76tkXeW6Hnj3bphCv1rbUlVSHT0EADSSPubKEmV5_GjAM5SZz2WdL0CSRxPy951Nng5Gk_fFVAllVZCJZIS9L2ANrbTsgmCSLXeJhfzPA8d-C_G0',
+    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+  },
+];
+
+const popularStories = [...newReleases].reverse();
+const recentlyPlayed = newReleases.slice(0, 2);
+
+const StoryCard = ({ item, onPress }) => (
+  <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
+    <ImageBackground
+      source={{ uri: item.image }}
+      style={styles.cardImage}
+      imageStyle={{ borderRadius: 12 }}
+    >
+      <View style={styles.cardOverlay} />
+      <View style={styles.playButton}>
+        <Ionicons name="play" size={24} color="white" />
+      </View>
+    </ImageBackground>
+    <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
+    <View style={styles.durationContainer}>
+      <MaterialIcons name="schedule" size={14} color={COLORS.textSecondary} />
+      <Text style={styles.cardDuration}>{item.duration.replace(':00', ' min')}</Text>
+    </View>
+  </TouchableOpacity>
+);
 
 const Home = () => {
+  const router = useRouter();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const story = {
+    title: 'Journey of Faith: The Prodigal Son',
+    subtitle:
+      'Rediscover forgiveness and unconditional love in this timeless parable.',
+    type: 'Bible Story',
+    category: "Jesus' Teachings",
+    duration: '14:00',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDGQPujiMucgSOVAAfKv_02V_Hw3bOOVwPzOe7815xV9H34cDGEkG2bZqoH08S8Q4WFp_kitO2iiSadlubdy0_iHHpdD_V4fv8Y2fi8bGBYJAKyjiPiIHJUmN0C2AJgpgS_JWBBAnxtaktTt7uZJJsfjhYQPSe02dboHu11FFOhQVyw9JdSp2XXE3Pde07LcofTZwR2mmigsKybDrEkBCKX7fOf65t-M9pOWApsqHXezu5eH6IyCBTMpInCVoE6UoM_zNGUggixYJiA',
+    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+  };
+
+  const handlePress = (item) => {
+    router.push({
+      pathname: '/player',
+      params: {
+        title: item.title,
+        subtitle: item.subtitle,
+        image: item.image,
+        duration: item.duration,
+        audio: item.audio,
+        type: item.type, // Pass the story type
+      },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Good Morning, Adeyinka</Text>
-          <MaterialIcons name="notifications" size={28} color={COLORS.textPrimary} />
+          <MaterialIcons
+            name="notifications"
+            size={28}
+            color={COLORS.textPrimary}
+          />
         </View>
         <View style={styles.cardContainer}>
           <ImageBackground
             source={{
-              uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD1SwHPWDUL_rH0PAgyKyJc0X8v-W-s8bzraR0jeSs0g9AY5rZnL1Oez5MlB37O0tFXMhLb09UPlw2e7e9VJjz0yPEVA5cWZ9RBhlPqS50iW3AwEC1R_sCsh8pFD_ct-CJkfKiybFzU-8AROZQvwNOxqy7hLYb5H929EfCvz2UQYICFbj29MPFFSioeVUBRIpMehvBg5bHbYZrB83dVhok9mcUfKefo09Y2PvlC7tmMgLaMedWHbQKsphDFBV6pzIZs0IoQFGWLCRXt',
+              uri: story.image,
             }}
             style={styles.heroCard}
             imageStyle={styles.heroImage}
           >
             <View style={styles.heroContent}>
               <View>
-                <Text style={styles.heroTitle}>
-                  Today's Prayer: A Moment of Gratitude
-                </Text>
-                <Text style={styles.heroSubtitle}>
-                  Find peace and thankfulness in this guided prayer.
-                </Text>
+                <Text style={styles.heroTitle}>{story.title}</Text>
+                <Text style={styles.heroSubtitle}>{story.subtitle}</Text>
               </View>
-              <Link href="/prayer" asChild>
-                <TouchableOpacity style={styles.beginButton}>
-                  <Text style={styles.beginButtonText}>Begin Prayer</Text>
-                </TouchableOpacity>
-              </Link>
+              <TouchableOpacity
+                style={styles.beginButton}
+                onPress={() => handlePress(story)}
+              >
+                <Text style={styles.beginButtonText}>Start Story</Text>
+              </TouchableOpacity>
             </View>
           </ImageBackground>
         </View>
-        <Text style={styles.sectionTitle}>Quick Access</Text>
-        <View style={styles.quickAccessGrid}>
-          <TouchableOpacity style={styles.quickAccessCard}>
-            <View style={styles.quickAccessIconContainer}>
-              <MaterialIcons
-                name="self-improvement"
-                size={32}
-                color={COLORS.primaryAccent}
-              />
-            </View>
-            <Text style={styles.quickAccessText}>Meditations</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.quickAccessCard}>
-            <View style={styles.quickAccessIconContainer}>
-              <MaterialIcons name="dark-mode" size={32} color={COLORS.primaryAccent} />
-            </View>
-            <Text style={styles.quickAccessText}>Bedtime Stories</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.quickAccessCard}>
-            <View style={styles.quickAccessIconContainer}>
-              <MaterialIcons name="forum" size={32} color={COLORS.primaryAccent} />
-            </View>
-            <Text style={styles.quickAccessText}>Prayer Topics</Text>
+        <View style={{ paddingHorizontal: 16 }}>
+          <Text style={styles.sectionTitle}>Recently Played</Text>
+        </View>
+        <FlatList
+          data={recentlyPlayed}
+          renderItem={({ item }) => (
+            <StoryCard item={item} onPress={() => handlePress(item)} />
+          )}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+        />
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>New Releases</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Text style={styles.suggestStoryButtonText}>Suggest story</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.sectionTitle}>Verse of the Day</Text>
+        <FlatList
+          data={newReleases}
+          renderItem={({ item }) => (
+            <StoryCard item={item} onPress={() => handlePress(item)} />
+          )}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+        />
+        <View style={{ paddingHorizontal: 16 }}>
+          <Text style={styles.sectionTitle}>Popular Stories</Text>
+        </View>
+        <FlatList
+          data={popularStories}
+          renderItem={({ item }) => (
+            <StoryCard item={item} onPress={() => handlePress(item)} />
+          )}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+        />
+        <View style={{ paddingHorizontal: 16 }}>
+          <Text style={styles.sectionTitle}>Verse of the Day</Text>
+        </View>
         <View style={styles.verseCard}>
           <Text style={styles.verseText}>
             "The Lord is my shepherd; I shall not want."
@@ -79,6 +200,7 @@ const Home = () => {
           <Text style={styles.verseReference}>Psalm 23:1</Text>
         </View>
       </ScrollView>
+      <SuggestStoryModal visible={isModalVisible} onClose={() => setModalVisible(false)} />
     </SafeAreaView>
   );
 };
@@ -148,37 +270,21 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
     fontSize: 20,
     fontWeight: 'bold',
-    paddingHorizontal: 16,
+    // Removed paddingHorizontal here, it's now in sectionHeader
     paddingBottom: 8,
     paddingTop: 16,
   },
-  quickAccessGrid: {
+  sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 8,
+    // paddingTop and paddingBottom are handled by sectionTitle for now
   },
-  quickAccessCard: {
-    flex: 1,
-    backgroundColor: COLORS.secondaryBg,
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginHorizontal: 4,
-  },
-  quickAccessIconContainer: {
-    backgroundColor: COLORS.elevatedSurface,
-    borderRadius: 9999,
-    width: 64,
-    height: 64,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  quickAccessText: {
-    color: COLORS.textPrimary,
+  suggestStoryButtonText: {
+    color: COLORS.primaryAccent,
     fontSize: 14,
     fontWeight: '600',
-    marginTop: 12,
   },
   verseCard: {
     backgroundColor: COLORS.secondaryBg,
@@ -198,6 +304,50 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: COLORS.primaryAccent,
+  },
+  // Styles for StoryCard
+  card: {
+    width: 160,
+    marginRight: 16,
+    backgroundColor: '#36454F',
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  cardImage: {
+    width: '100%',
+    aspectRatio: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  cardOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+  },
+  playButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.primaryAccent,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 8,
+  },
+  cardTitle: {
+    color: COLORS.textPrimary,
+    fontSize: 16,
+    fontWeight: 'bold',
+    padding: 8,
+  },
+  durationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+  },
+  cardDuration: {
+    color: COLORS.textSecondary,
+    marginLeft: 4,
+    fontSize: 12,
   },
 });
 

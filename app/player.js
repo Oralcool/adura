@@ -53,7 +53,7 @@ const PlayerScreen = () => {
     );
   }
 
-  const headerTitle = currentTrack.sourceScreen === 'stories' ? 'Bible Story' : 'Bedtime Story';
+  const headerTitle = currentTrack.type;
 
   return (
     <SafeAreaView style={styles.safeArea}>
