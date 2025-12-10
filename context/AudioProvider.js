@@ -7,7 +7,9 @@ export const AudioProvider = ({ children }) => {
   const [currentTrack, setCurrentTrack] = useState(null);
   
   // The player is initialized without a source
-  const player = useAudioPlayer(null);
+  const player = useAudioPlayer(null, {
+    staysActiveInBackground: true,
+  });
   const status = useAudioPlayerStatus(player);
 
   const loadTrack = (track) => {

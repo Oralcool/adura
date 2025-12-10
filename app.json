@@ -14,7 +14,12 @@
       "backgroundColor": "#0E1621"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +27,10 @@
         "backgroundColor": "#0E1621"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.jossyoro01.adura"
+      "package": "com.jossyoro01.adura",
+      "permissions": [
+        "FOREGROUND_SERVICE"
+      ]
     },
     "plugins": [
       "expo-router",
