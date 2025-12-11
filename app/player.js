@@ -136,7 +136,7 @@ const PlayerScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0B0724',
+    backgroundColor: COLORS.primaryBg,
   },
   header: {
     flexDirection: 'row',

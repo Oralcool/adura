@@ -20,6 +20,7 @@ const RootLayout = () => {
           <Stack.Screen name="paywall" />
           <Stack.Screen name="prayer" options={{ presentation: 'transparentModal', headerShown: false }} />
           <Stack.Screen name="player" options={{ presentation: 'transparentModal', headerShown: false }} />
+          <Stack.Screen name="profile" />
         </Stack>
       </AudioProvider>
     </AuthProvider>

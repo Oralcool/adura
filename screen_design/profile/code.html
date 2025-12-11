@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile &amp; Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eebd2b", // Soft Gold
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#0B1015", // Deep Midnight Blue
+                        "surface-dark": "#151B24", // Charcoal Blue
+                        "surface-highlight": "#1E2530",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem",
+                        "xl": "2rem",
+                        "2xl": "2.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-[#181611] dark:text-white font-display antialiased selection:bg-primary selection:text-[#181611]">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 flex items-center justify-between bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 pb-2">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="arrow_back">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Profile &amp; Settings</h2>
+</header>
+<main class="flex-1 flex flex-col p-4 gap-6">
+<!-- Hero / ActionPanel: Sign In -->
+<section class="w-full">
+<div class="flex flex-col items-start justify-between gap-5 rounded-2xl bg-white dark:bg-surface-dark p-6 shadow-sm border border-gray-200 dark:border-white/5">
+<div class="flex flex-row items-center gap-4 w-full">
+<div class="size-12 rounded-full bg-primary/20 flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-3xl">account_circle</span>
+</div>
+<div class="flex flex-col gap-1 flex-1">
+<h3 class="text-base font-bold leading-tight">Sign in to sync your prayers</h3>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Save your meditation history and access it on all devices.</p>
+</div>
+</div>
+<button class="w-full cursor-pointer flex items-center justify-center rounded-full h-12 px-6 bg-primary hover:bg-yellow-400 active:scale-[0.98] transition-all text-background-dark text-sm font-bold tracking-wide uppercase">
+                        Sign In / Create Account
+                    </button>
+</div>
+</section>
+<!-- Support & Info Section -->
+<section class="flex flex-col gap-3">
+<!-- SectionHeader -->
+<h3 class="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase ml-2">Support &amp; Info</h3>
+<div class="flex flex-col rounded-2xl bg-white dark:bg-surface-dark overflow-hidden shadow-sm border border-gray-200 dark:border-white/5">
+<!-- List Item: Help -->
+<button class="group flex items-center justify-between p-4 w-full hover:bg-gray-50 dark:hover:bg-surface-highlight transition-colors border-b border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-4">
+<div class="size-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">help</span>
+</div>
+<span class="text-base font-medium">Help &amp; FAQ</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-xl group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</button>
+<!-- List Item: Feedback -->
+<button class="group flex items-center justify-between p-4 w-full hover:bg-gray-50 dark:hover:bg-surface-highlight transition-colors border-b border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-4">
+<div class="size-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">mail</span>
+</div>
+<span class="text-base font-medium">Send Feedback</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-xl group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</button>
+<!-- List Item: Terms -->
+<button class="group flex items-center justify-between p-4 w-full hover:bg-gray-50 dark:hover:bg-surface-highlight transition-colors border-b border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-4">
+<div class="size-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">policy</span>
+</div>
+<span class="text-base font-medium">Terms &amp; Privacy Policy</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-xl group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</button>
+<!-- List Item: Rate App -->
+<button class="group flex items-center justify-between p-4 w-full hover:bg-gray-50 dark:hover:bg-surface-highlight transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">star</span>
+</div>
+<span class="text-base font-medium">Rate App</span>
+</div>
+<span class="material-symbols-outlined text-gray-400 text-xl group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Subscription Management -->
+<section class="mt-2">
+<button class="group w-full flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/5 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+<span class="text-base font-medium text-red-500 dark:text-red-400">Cancel Subscription</span>
+<span class="material-symbols-outlined text-red-400/50 text-xl group-hover:translate-x-0.5 transition-transform">chevron_right</span>
+</button>
+</section>
+<!-- Footer Info -->
+<div class="py-6 text-center">
+<p class="text-xs text-gray-400 dark:text-white/30 font-medium">App Version 1.0.3</p>
+</div>
+<!-- Bottom Navigation Placeholder (Visual Context) -->
+<div class="h-10"></div>
+</main>
+<!-- Simple Tab Bar Context -->
+<nav class="sticky bottom-0 w-full bg-background-light dark:bg-background-dark border-t border-gray-200 dark:border-white/10 px-6 py-3 flex justify-between items-center z-20">
+<div class="flex flex-col items-center gap-1 opacity-50 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-2xl">spa</span>
+<span class="text-[10px] font-medium">Meditate</span>
+</div>
+<div class="flex flex-col items-center gap-1 opacity-50 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-2xl">book_2</span>
+<span class="text-[10px] font-medium">Journal</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-2xl fill-current">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</div>
+</nav>
+</div>
+</body></html>

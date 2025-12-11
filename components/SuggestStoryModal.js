@@ -44,7 +44,7 @@ const SuggestStoryModal = ({ visible, onClose }) => {
           </View>
           <TextInput
             style={styles.input}
-            placeholder="Your Name (Optional)"
+            placeholder="Email (Optional for feedback)"
             placeholderTextColor={COLORS.textSecondary}
           />
           <TextInput

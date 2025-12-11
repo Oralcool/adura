@@ -36,13 +36,6 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="prayers"
-          options={{
-            title: 'Prayers',
-            tabBarIcon: ({ color }) => <Ionicons name="leaf-outline" size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
           name="stories"
           options={{
             title: 'Stories',
@@ -54,6 +47,13 @@ const TabsLayout = () => {
           options={{
             title: 'Sleep',
             tabBarIcon: ({ color }) => <Ionicons name="moon-outline" size={24} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="favorites"
+          options={{
+            title: 'Favorites',
+            tabBarIcon: ({ color }) => <Ionicons name="heart-outline" size={24} color={color} />,
           }}
         />
       </Tabs>

@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
     activeChip: {
-        backgroundColor: '#737C8C',
+        backgroundColor: COLORS.primaryAccent,
     },
     chipText: {
         color: COLORS.textPrimary,

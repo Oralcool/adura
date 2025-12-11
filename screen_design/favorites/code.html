@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Favorites Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#F4D03F",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#0A192F",
+                        "component-light": "#FFFFFF",
+                        "component-dark": "#33415C",
+                        "text-light": "#1f2937",
+                        "text-dark": "#e5e7eb",
+                        "text-muted-light": "#6b7280",
+                        "text-muted-dark": "#9ca3af",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-10 flex items-center justify-between bg-background-light/80 px-4 py-3 backdrop-blur-sm dark:bg-background-dark/80">
+<div class="flex size-12 shrink-0 items-center justify-start">
+<button class="flex h-10 w-10 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+</div>
+<h1 class="flex-1 text-center text-lg font-bold">Favorites</h1>
+<div class="flex size-12 shrink-0 items-center justify-end">
+<button class="flex h-10 w-10 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">edit_note</span>
+</button>
+</div>
+</header>
+<main class="flex flex-1 flex-col px-4">
+<!-- Search Bar -->
+<div class="py-3">
+<label class="flex h-12 w-full min-w-40 flex-col">
+<div class="flex h-full w-full flex-1 items-stretch rounded bg-component-light dark:bg-component-dark">
+<div class="flex items-center justify-center pl-4 text-text-muted-light dark:text-text-muted-dark">
+<span class="material-symbols-outlined text-2xl">search</span>
+</div>
+<input class="form-input h-full min-w-0 flex-1 resize-none overflow-hidden border-none bg-transparent px-2 text-base font-normal placeholder:text-text-muted-light placeholder:dark:text-text-muted-dark focus:outline-0 focus:ring-0" placeholder="Search your favorites..." value=""/>
+</div>
+</label>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto py-3 [-ms-overflow-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary pl-5 pr-5">
+<p class="text-sm font-medium text-background-dark">All</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-component-light dark:bg-component-dark pl-5 pr-5">
+<p class="text-sm font-medium">Prayers</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-component-light dark:bg-component-dark pl-5 pr-5">
+<p class="text-sm font-medium">Meditations</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-component-light dark:bg-component-dark pl-5 pr-5">
+<p class="text-sm font-medium">Music</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-component-light dark:bg-component-dark pl-5 pr-5">
+<p class="text-sm font-medium">Courses</p>
+</div>
+<div class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-component-light dark:bg-component-dark pl-5 pr-5">
+<p class="text-sm font-medium">Scripture</p>
+</div>
+</div>
+<!-- Toolbar -->
+<div class="flex items-center justify-between gap-2 py-3">
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-1 rounded-full bg-component-light px-3 py-1.5 dark:bg-component-dark">
+<span class="material-symbols-outlined text-lg">swap_vert</span>
+<span class="text-sm font-medium">Sort by: Recently Added</span>
+</button>
+</div>
+<div class="flex items-center gap-1 rounded-full bg-component-light p-1 dark:bg-component-dark">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-background-light dark:bg-background-dark">
+<span class="material-symbols-outlined text-xl">view_list</span>
+</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-full">
+<span class="material-symbols-outlined text-xl text-text-muted-light dark:text-text-muted-dark">grid_view</span>
+</button>
+</div>
+</div>
+<!-- Content List -->
+<div class="flex flex-col gap-3 py-3">
+<!-- List Item 1 -->
+<div class="flex items-center gap-4 rounded bg-component-light p-3 dark:bg-component-dark">
+<div class="aspect-square size-16 shrink-0 rounded bg-cover bg-center bg-no-repeat" data-alt="Abstract gradient of blue and gold light trails" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAFUbOI3wngr5j3UeyoqqzBquEuvFVQRfJ-CYeSYmNJAnGnQJRAwoKeJIPUxbKaGBnggNXoEJDF5Hot-jpxtuXZYb-qjETk2FkdM9eLxoQQJ4_d0zIzPx9QdLMds-0cklKo6rGR1BKsfbhbSRt7-aiVKvZ67P-oiS7DGyKJ7yYva7bZoDx-rowQCbl_dziSzOlf0nffyFSPowlICLlUGNAyjjtbA7V06ZLy6_BcKfg5byjDDnWbOY-eNdDHEmKVeLrWXeZf4XyRbbcm");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold">Morning Gratitude Meditation</p>
+<p class="truncate text-sm text-text-muted-light dark:text-text-muted-dark">5 min • By Sarah Jennings</p>
+</div>
+<div class="flex shrink-0 items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary text-background-dark">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="flex size-10 items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="flex items-center gap-4 rounded bg-component-light p-3 dark:bg-component-dark">
+<div class="aspect-square size-16 shrink-0 rounded bg-cover bg-center bg-no-repeat" data-alt="Sunlight filtering through a peaceful forest canopy" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD6DRoLUqNUH45Ty8eL6-5idDiJ5yYoY_GDSqvYlg_JrJ5jqO9R_3JyIP1fAZFZ-XrwaJ5B9IxanS0mbAYIIF76KdqmrNptchGJmwmJadcB6TGpeMZ4V1HeiblBY4uwgyXUUZAA88g5KgxNTHXqfxPbfEuOnfyj9y_R3_c3oI1_-5A-A_dJZI8esEN7i5SNSbXrrk81TzhlCLqOkO_Ux8SHpXlrlAQTkunn8tHWwBnE8BArl6tJvG1Pu0fClTj7qkaM0T2-uGFjar4p");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold">The Serenity Prayer</p>
+<p class="truncate text-sm text-text-muted-light dark:text-text-muted-dark">2 min • Audio Prayer</p>
+</div>
+<div class="flex shrink-0 items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary text-background-dark">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="flex size-10 items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="flex items-center gap-4 rounded bg-component-light p-3 dark:bg-component-dark">
+<div class="aspect-square size-16 shrink-0 rounded bg-cover bg-center bg-no-repeat" data-alt="Calm water surface with gentle ripples at dusk" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA6iw1IXmGAw30y1xEX24H6U14suk_e0TlxhULfd2xsRXmYkDNQq7Pjpg-HWj32iN47VcvW7HDAN7z7RxLxfo3D9IqzeKXoWIt9CknM1l_2YlqRHU_8GyzMJ0Q51grgs_tmyH9ET-JXiYkJpBBrqpLu-H4IbwxiIWtBmkOgkoUEXaE0QPfWIZHhzthy78dn0aNJB37ZBLrmsxa5pLQ7n8arQ922w3XOq_FfNOw00g8EKHQkhKhvj3ebv65-3OcdMFIDI5nCcbe3p1Qv");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold">Peaceful Evening Reflections</p>
+<p class="truncate text-sm text-text-muted-light dark:text-text-muted-dark">15 min • Sleep Meditation</p>
+</div>
+<div class="flex shrink-0 items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary text-background-dark">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="flex size-10 items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</div>
+<!-- Empty State Example (commented out by default) -->
+<!--
+                <div class="flex flex-1 flex-col items-center justify-center space-y-4 py-16 text-center">
+                    <div class="flex size-20 items-center justify-center rounded-full bg-component-light dark:bg-component-dark">
+                         <span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">sanctuary</span>
+                    </div>
+                    <h3 class="text-lg font-semibold">Your sanctuary is empty</h3>
+                    <p class="max-w-xs text-sm text-text-muted-light dark:text-text-muted-dark">Explore and tap the heart icon on content you love to save it here.</p>
+                </div>
+                -->
+</div>
+</main>
+</div>
+</body></html>

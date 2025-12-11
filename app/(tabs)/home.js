@@ -120,11 +120,13 @@ const Home = () => {
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Good Morning, Adeyinka</Text>
-          <MaterialIcons
-            name="notifications"
-            size={28}
-            color={COLORS.textPrimary}
-          />
+          <TouchableOpacity onPress={() => router.push('/profile')}>
+            <Ionicons
+              name="person-circle-outline"
+              size={28}
+              color={COLORS.textPrimary}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.cardContainer}>
           <ImageBackground
@@ -143,7 +145,7 @@ const Home = () => {
                 style={styles.beginButton}
                 onPress={() => handlePress(story)}
               >
-                <Text style={styles.beginButtonText}>Start Story</Text>
+                <Text style={styles.beginButtonText}>Listen Now</Text>
               </TouchableOpacity>
             </View>
           </ImageBackground>
