@@ -8,76 +8,14 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import COLORS from '../../constants/colors';
 import { useRouter } from 'expo-router';
-
-const stories = [
-  {
-    id: '1',
-    title: 'The Good Samaritan',
-    type: 'Bible Story',
-    category: "Jesus' Teachings",
-    subtitle: 'A story of compassion and helping others in need',
-    duration: '15:00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD_XHV0SRzTNsscbeKuCEsnC_RtQsYMNYLCLk3EhcNf25Uj5DeFOua25KUsmUid4rPJ-td-H92XsE4jJ5OeBpAfdRLF5worTPk93VNtPR87y7ZR-g_wO0pcNe9MnCBKzz8jf044DlvSHppruzGJvVvVYY4sEWDrecHcdh5lropYssfbYVHCHaLrV2Vs_qzEiyUA60t5Voi55oB_-w5WZqLV1_DcaY9bGgvwLqQ2Jpc3SEsbGgWyPkOrAPkHuNXDn32yI4BvAd691nkd',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-  },
-  {
-    id: '2',
-    title: 'David and Goliath',
-    type: 'Bible Story',
-    category: 'Old Testament',
-    subtitle: 'A tale of courage and faith against all odds',
-    duration: '12:00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC2YKeiW_nxD-Pu7gyhsQJTrlYNgBOjIzLsJJZhUtb2L5fvBLq8ZaEwjfB8WbM-p7HGsr2HZKNTeLHz6D4ilgWIE_WW3B4wl3d8B1JIr8xRpeHTZlmGFzsVORgHb-kGChfkCsrxpWhw9Vt8ph-e1IEKQRTq3qd52dQ8A3G67nEJP17kqCa5xQuuzvHFOYeQ5vYXWzhR3Hpf5Zwi2ccDixizgHVSvcPsNENnuQe77jR8wmEuYtJaHUsrtQa1IJylnPzwb0y-R_kt0eWj',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-  },
-  {
-    id: '3',
-    title: 'The Creation',
-    type: 'Bible Story',
-    category: 'Old Testament',
-    subtitle: 'The beginning of all things and God\'s beautiful creation',
-    duration: '20:00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDn7YyX53p75wkK-vRcyrDabmBVW9dZLR8W2x1WP7gUa5VWubHGjYSaArzBpKErrzl17GosfPGWhr9qqd-UvhIGPX2zzF2bd-8jC8BYG4IZd65obr6FRukf23MgybGiD3PZNBoPeDamcHHy28DAaHLZmtzW2UeoCdb09q251tkB-FMfEPoQSejz9ssL-d1sFbgF7rcWIr0T9jJIUa2huMH5NsjSkkt1YD_WTNmyh0xRy7iJdSr-KN-AX1VgPJ5eYzdjLBAOjCMqLy3d',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-  },
-  {
-    id: '4',
-    title: "Daniel in the Lion's Den",
-    type: 'Bible Story',
-    category: 'Prophets',
-    subtitle: 'Faith and protection in the face of danger',
-    duration: '18:00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXfM_9erAUPZLERrsVnu_s1XFy19lCEyY44NeicKwbq8HOdgtxUXh5MisJzi9QuEVjXNBudmEnOfm-XMnlUM5mDTJa6cVwWLxZHWP6uLAV16OITQKibOxzCzSSucj7b7-2sUrxZtK_pK4NUQgPXahKDYZ--R5n76tkXeW6Hnj3bphCv1rbUlVSHT0EADSSPubKEmV5_GjAM5SZz2WdL0CSRxPy951Nng5Gk_fFVAllVZCJZIS9L2ANrbTsgmCSLXeJhfzPA8d-C_G0',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-  },
-  {
-    id: '5',
-    title: 'The Prodigal Son',
-    type: 'Bible Story',
-    category: "Jesus' Teachings",
-    subtitle: 'A journey of redemption and unconditional love',
-    duration: '14:00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGQPujiMucgSOVAAfKv_02V_Hw3bOOVwPzOe7815xV9H34cDGEkG2bZqoH08S8Q4WFp_kitO2iiSadlubdy0_iHHpdD_V4fv8Y2fi8bGBYJAKyjiPiIHJUmN0C2AJgpgS_JWBBAnxtaktTt7uZJJsfjhYQPSe02dboHu11FFOhQVyw9JdSp2XXE3Pde07LcofTZwR2mmigsKybDrEkBCKX7fOf65t-M9pOWApsqHXezu5eH6IyCBTMpInCVoE6UoM_zNGUggixYJiA',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-  },
-  {
-    id: '6',
-    title: "Noah's Ark",
-    type: 'Bible Story',
-    category: 'Old Testament',
-    subtitle: 'Trust and obedience through the great flood',
-    duration: '25:00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAQEkoynPq6ZX4osbB-xfsV32k-N1zcEYwVszTts4xBWPy9EfsOTkCkObKR8ZremDHi5hoDevgW3-WQzRfOXz_YzEcu1MEo1uHrRL7dlARtf3vUgOpGlW-23F4NZZNA2LrbQi2YAJU9jb2dfGlx8rGlxeDxg8EJQbCLMAkcmG-hgkY1VEjSV2A5McOEJoejiEEI-1CUSRTe49N3DpLYxI9knXA2jUEZrQKEUOi3FUjiVQtQ2DSLe2wc2UN6vTp9mcxsYO4ghcqO-8SJ',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
-  },
-];
-
-const chips = ['All', 'Old Testament', "Jesus' Teachings", 'Prophets', 'Kids'];
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { auth } from '../../firebaseConfig';
 
 const StoryCard = ({ item, onPress }) => (
   <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
@@ -103,7 +41,28 @@ const StoriesScreen = () => {
   const router = useRouter();
   const [activeChip, setActiveChip] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredStories, setFilteredStories] = useState(stories);
+  const [stories, setStories] = useState([]);
+  const [filteredStories, setFilteredStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState(['All']);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      const db = getFirestore();
+      const storiesCollection = collection(db, 'stories');
+      const storySnapshot = await getDocs(storiesCollection);
+      const storyList = storySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setStories(storyList);
+      setFilteredStories(storyList);
+
+      const uniqueCategories = [...new Set(storyList.map(story => story.category))];
+      setCategories(['All', ...uniqueCategories]);
+
+      setLoading(false);
+    };
+
+    fetchStories();
+  }, []);
 
   useEffect(() => {
     let newFilteredStories = stories;
@@ -125,7 +84,7 @@ const StoriesScreen = () => {
     }
 
     setFilteredStories(newFilteredStories);
-  }, [activeChip, searchQuery]);
+  }, [activeChip, searchQuery, stories]);
 
   const handleStoryPress = (story) => {
     router.push({
@@ -140,6 +99,14 @@ const StoriesScreen = () => {
       },
     });
   };
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.primaryBg }}>
+        <ActivityIndicator size="large" color={COLORS.primaryAccent} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -175,7 +142,7 @@ const StoriesScreen = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.chipsContainer}
         >
-          {chips.map((chip) => (
+          {categories.map((chip) => (
             <TouchableOpacity
               key={chip}
               style={[

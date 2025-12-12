@@ -1,84 +1,182 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  FlatList,
+  ScrollView,
   ImageBackground,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Link, useRouter } from 'expo-router';
 import COLORS from '../../constants/colors';
-
-const sleepStories = [
-  {
-    id: '1',
-    title: 'The Whispering River',
-    type: 'Bedtime Story',
-    duration: '25 min',
-    image: 'https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    subtitle: 'Let the gentle sounds of the river guide you to sleep.',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
-  },
-  {
-    id: '2',
-    title: 'The Enchanted Forest',
-    type: 'Bedtime Story',
-    duration: '30 min',
-    image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    subtitle: 'A magical journey through a forest of wonders.',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-  },
-];
+import { useRouter } from 'expo-router';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 
 const SleepStoryCard = ({ item, onPress }) => (
-    <View style={styles.card}>
-        <ImageBackground
-        source={{ uri: item.image }}
-        style={styles.cardImage}
-        imageStyle={{ borderRadius: 12 }}
-        >
-        <View style={styles.cardOverlay} />
-        <View style={styles.playButton}>
-            <Ionicons name="play" size={24} color="white" />
-        </View>
-        </ImageBackground>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <View style={styles.durationContainer}>
-        <MaterialIcons name="schedule" size={14} color={COLORS.textSecondary} />
-        <Text style={styles.cardDuration}>{item.duration}</Text>
-        </View>
+  <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
+    <ImageBackground
+      source={{ uri: item.image }}
+      style={styles.cardImage}
+      imageStyle={{ borderRadius: 12 }}
+    >
+      <View style={styles.cardOverlay} />
+      <View style={styles.playButton}>
+        <Ionicons name="play" size={24} color="white" />
+      </View>
+    </ImageBackground>
+    <Text style={styles.cardTitle}>{item.title}</Text>
+    <View style={styles.durationContainer}>
+      <MaterialIcons name="schedule" size={14} color={COLORS.textSecondary} />
+      <Text style={styles.cardDuration}>{item.duration.replace(':00', ' min')}</Text>
     </View>
+  </TouchableOpacity>
 );
 
-
 const SleepScreen = () => {
-    const router = useRouter();
+  const router = useRouter();
+  const [activeChip, setActiveChip] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [stories, setStories] = useState([]);
+  const [filteredStories, setFilteredStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState(['All']);
 
+  useEffect(() => {
+    const fetchStories = async () => {
+      const db = getFirestore();
+      const storiesCollection = collection(db, 'sleepstories');
+      const storySnapshot = await getDocs(storiesCollection);
+      const storyList = storySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setStories(storyList);
+      setFilteredStories(storyList);
+
+      const categoriesFromData = [...new Set(storyList.flatMap(story => story.category ? [story.category] : []))];
+      if (categoriesFromData.length > 0) {
+        setCategories(['All', ...categoriesFromData]);
+      } else {
+        setCategories([]);
+      }
+
+      setLoading(false);
+    };
+
+    fetchStories();
+  }, []);
+
+  useEffect(() => {
+    let newFilteredStories = stories;
+
+    // Filter by active chip
+    if (activeChip !== 'All') {
+      newFilteredStories = newFilteredStories.filter(
+        (story) => story.category === activeChip
+      );
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      newFilteredStories = newFilteredStories.filter(
+        (story) =>
+          story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (story.subtitle && story.subtitle.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+
+    setFilteredStories(newFilteredStories);
+  }, [activeChip, searchQuery, stories]);
+
+  const handleStoryPress = (story) => {
+    router.push({
+      pathname: '/player',
+      params: {
+        title: story.title,
+        subtitle: story.subtitle,
+        image: story.image,
+        duration: story.duration,
+        audio: story.audio,
+        type: story.type,
+      },
+    });
+  };
+
+  if (loading) {
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Sleep Stories</Text>
-            </View>
-
-            <FlatList
-                data={sleepStories}
-                renderItem={({ item }) => (
-                    <Link href={{ pathname: "/player", params: { title: item.title, subtitle: item.subtitle, image: item.image, duration: item.duration, type: item.type, audio: item.audio } }} asChild>
-                        <TouchableOpacity>
-                            <SleepStoryCard item={item} />
-                        </TouchableOpacity>
-                    </Link>
-                )}
-                keyExtractor={(item) => item.id}
-                numColumns={1} // Sleep stories might look better in a single column list
-                contentContainerStyle={styles.grid}
-                showsVerticalScrollIndicator={false}
-            />
-        </SafeAreaView>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.primaryBg }}>
+        <ActivityIndicator size="large" color={COLORS.primaryAccent} />
+      </View>
     );
+  }
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Sleep Stories</Text>
+      </View>
+
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInput}>
+          <Ionicons
+            name="search"
+            size={24}
+            color={COLORS.textSecondary}
+            style={{ marginLeft: 10 }}
+          />
+          <TextInput
+            placeholder="Search for a story..."
+            placeholderTextColor={COLORS.textSecondary}
+            style={styles.textInput}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+      </View>
+
+      {categories.length > 1 && (
+        <View style={{ height: 50, marginTop: 10 }}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.chipsContainer}
+          >
+            {categories.map((chip) => (
+              <TouchableOpacity
+                key={chip}
+                style={[
+                  styles.chip,
+                  activeChip === chip && styles.activeChip,
+                ]}
+                onPress={() => setActiveChip(chip)}
+              >
+                <Text
+                  style={[
+                    styles.chipText,
+                    activeChip === chip && styles.activeChipText,
+                  ]}
+                >
+                  {chip}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
+      <FlatList
+        data={filteredStories}
+        renderItem={({ item }) => (
+          <SleepStoryCard item={item} onPress={() => handleStoryPress(item)} />
+        )}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        contentContainerStyle={styles.grid}
+        showsVerticalScrollIndicator={false}
+      />
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -96,6 +194,45 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
     },
+    searchContainer: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+    },
+    searchInput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#36454F',
+        borderRadius: 12,
+        height: 48,
+    },
+    textInput: {
+        flex: 1,
+        color: COLORS.textPrimary,
+        marginLeft: 10,
+        fontSize: 16,
+    },
+    chipsContainer: {
+        paddingHorizontal: 16,
+        alignItems: 'center',
+    },
+    chip: {
+        backgroundColor: '#36454F',
+        borderRadius: 20,
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        marginRight: 8,
+    },
+    activeChip: {
+        backgroundColor: COLORS.primaryAccent,
+    },
+    chipText: {
+        color: COLORS.textPrimary,
+        fontWeight: '500',
+    },
+    activeChipText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
     grid: {
         paddingHorizontal: 8,
     },
@@ -108,7 +245,7 @@ const styles = StyleSheet.create({
     },
     cardImage: {
         width: '100%',
-        aspectRatio: 16/9,
+        aspectRatio: 1,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
@@ -127,7 +264,7 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         color: COLORS.textPrimary,
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         padding: 8,
     },
@@ -140,7 +277,7 @@ const styles = StyleSheet.create({
     cardDuration: {
         color: COLORS.textSecondary,
         marginLeft: 4,
-        fontSize: 14,
+        fontSize: 12,
     },
 });
 
