@@ -15,6 +15,10 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import COLORS from '../../constants/colors';
 import { useRouter } from 'expo-router';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const RECENTLY_PLAYED_KEY = 'recentlyPlayedList';
+const MAX_RECENTLY_PLAYED = 10;
 
 const SleepStoryCard = ({ item, onPress }) => (
   <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
@@ -89,7 +93,26 @@ const SleepScreen = () => {
     setFilteredStories(newFilteredStories);
   }, [activeChip, searchQuery, stories]);
 
+  const addRecentlyPlayedItem = async (item) => {
+    try {
+      const existingItems = await AsyncStorage.getItem(RECENTLY_PLAYED_KEY);
+      let items = existingItems ? JSON.parse(existingItems) : [];
+      
+      items = items.filter(i => i.id !== item.id);
+      items.unshift(item);
+
+      if (items.length > MAX_RECENTLY_PLAYED) {
+        items = items.slice(0, MAX_RECENTLY_PLAYED);
+      }
+
+      await AsyncStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(items));
+    } catch (error) {
+      console.error("Failed to save recently played item.", error);
+    }
+  };
+
   const handleStoryPress = (story) => {
+    addRecentlyPlayedItem(story);
     router.push({
       pathname: '/player',
       params: {

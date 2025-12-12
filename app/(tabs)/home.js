@@ -6,15 +6,14 @@ import {
   ImageBackground,
   TouchableOpacity,
   FlatList,
-  Platform,
-  StatusBar,
 } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import COLORS from '../../constants/colors';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useRouter, useFocusEffect } from 'expo-router';
+import React, { useState, useEffect, useCallback } from 'react';
 import SuggestStoryModal from '../../components/SuggestStoryModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const newReleases = [
   {
@@ -64,7 +63,8 @@ const newReleases = [
 ];
 
 const popularStories = [...newReleases].reverse();
-const recentlyPlayed = newReleases.slice(0, 2);
+const RECENTLY_PLAYED_KEY = 'recentlyPlayedList';
+const MAX_RECENTLY_PLAYED = 10;
 
 const StoryCard = ({ item, onPress }) => (
   <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
@@ -89,7 +89,10 @@ const StoryCard = ({ item, onPress }) => (
 const Home = () => {
   const router = useRouter();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [recentlyPlayedItems, setRecentlyPlayedItems] = useState([]);
+
   const story = {
+    id: 'hero-story-prodigal-son',
     title: 'Journey of Faith: The Prodigal Son',
     subtitle:
       'Rediscover forgiveness and unconditional love in this timeless parable.',
@@ -101,7 +104,48 @@ const Home = () => {
     audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
   };
 
+  const addRecentlyPlayedItem = async (item) => {
+    try {
+      const existingItems = await AsyncStorage.getItem(RECENTLY_PLAYED_KEY);
+      let items = existingItems ? JSON.parse(existingItems) : [];
+      
+      // Remove existing item if it's already in the list to avoid duplicates
+      items = items.filter(i => i.id !== item.id);
+
+      // Add the new item to the beginning of the list
+      items.unshift(item);
+
+      // Limit the number of recently played items
+      if (items.length > MAX_RECENTLY_PLAYED) {
+        items = items.slice(0, MAX_RECENTLY_PLAYED);
+      }
+
+      await AsyncStorage.setItem(RECENTLY_PLAYED_KEY, JSON.stringify(items));
+      setRecentlyPlayedItems(items);
+    } catch (error) {
+      console.error("Failed to save recently played item.", error);
+    }
+  };
+
+  const loadRecentlyPlayed = useCallback(async () => {
+    try {
+      const storedItems = await AsyncStorage.getItem(RECENTLY_PLAYED_KEY);
+      if (storedItems !== null) {
+        setRecentlyPlayedItems(JSON.parse(storedItems));
+      }
+    } catch (error) {
+      console.error("Failed to load recently played items.", error);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadRecentlyPlayed();
+    }, [loadRecentlyPlayed])
+  );
+
   const handlePress = (item) => {
+    addRecentlyPlayedItem(item);
     router.push({
       pathname: '/player',
       params: {
@@ -110,7 +154,7 @@ const Home = () => {
         image: item.image,
         duration: item.duration,
         audio: item.audio,
-        type: item.type, // Pass the story type
+        type: item.type,
       },
     });
   };
@@ -153,16 +197,30 @@ const Home = () => {
         <View style={{ paddingHorizontal: 16 }}>
           <Text style={styles.sectionTitle}>Recently Played</Text>
         </View>
-        <FlatList
-          data={recentlyPlayed}
-          renderItem={({ item }) => (
-            <StoryCard item={item} onPress={() => handlePress(item)} />
-          )}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
-        />
+        {recentlyPlayedItems.length > 0 ? (
+          <FlatList
+            data={recentlyPlayedItems}
+            renderItem={({ item }) => (
+              <StoryCard item={item} onPress={() => handlePress(item)} />
+            )}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+          />
+        ) : (
+          <View style={styles.emptyStateContainer}>
+            <Text style={styles.emptyStateText}>
+              Your recently played stories will appear here.
+            </Text>
+            <TouchableOpacity
+              style={styles.exploreButton}
+              onPress={() => router.push('/(tabs)/stories')}
+            >
+              <Text style={styles.exploreButtonText}>Explore Stories</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>New Releases</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -276,7 +334,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingTop: 16,
   },
-  sectionHeader: {
+  sectionHeader:{
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -350,6 +408,32 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     marginLeft: 4,
     fontSize: 12,
+  },
+  emptyStateContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.secondaryBg,
+    borderRadius: 12,
+    marginHorizontal: 16,
+  },
+  emptyStateText: {
+    color: COLORS.textSecondary,
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  exploreButton: {
+    backgroundColor: COLORS.primaryAccent,
+    borderRadius: 9999,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  exploreButtonText: {
+    color: COLORS.primaryButtonText,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
