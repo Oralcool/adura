@@ -6,6 +6,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,55 +15,8 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import React, { useState, useEffect, useCallback } from 'react';
 import SuggestStoryModal from '../../components/SuggestStoryModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore, collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
-const newReleases = [
-  {
-    id: '1',
-    title: 'The Good Samaritan',
-    type: 'Bible Story',
-    category: "Jesus' Teachings",
-    subtitle: 'A story of compassion and helping others in need',
-    duration: '15:00',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuD_XHV0SRzTNsscbeKuCEsnC_RtQsYMNYLCLk3EhcNf25Uj5DeFOua25KUsmUid4rPJ-td-H92XsE4jJ5OeBpAfdRLF5worTPk93VNtPR87y7ZR-g_wO0pcNe9MnCBKzz8jf044DlvSHppruzGJvVvVYY4sEWDrecHcdh5lropYssfbYVHCHaLrV2Vs_qzEiyUA60t5Voi55oB_-w5WZqLV1_DcaY9bGgvwLqQ2Jpc3SEsbGgWyPkOrAPkHuNXDn32yI4BvAd691nkd',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-  },
-  {
-    id: '2',
-    title: 'David and Goliath',
-    type: 'Bible Story',
-    category: 'Old Testament',
-    subtitle: 'A tale of courage and faith against all odds',
-    duration: '12:00',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuC2YKeiW_nxD-Pu7gyhsQJTrlYNgBOjIzLsJJZhUtb2L5fvBLq8ZaEwjfB8WbM-p7HGsr2HZKNTeLHz6D4ilgWIE_WW3B4wl3d8B1JIr8xRpeHTZlmGFzsVORgHb-kGChfkCsrxpWhw9Vt8ph-e1IEKQRTq3qd52dQ8A3G67nEJP17kqCa5xQuuzvHFOYeQ5vYXWzhR3Hpf5Zwi2ccDixizgHVSvcPsNENnuQe77jR8wmEuYtJaHUsrtQa1IJylnPzwb0y-R_kt0eWj',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-  },
-  {
-    id: '3',
-    title: 'The Sleepy Shepherd',
-    type: 'Bedtime Story',
-    category: 'Sleep',
-    subtitle: "A calming tale about a shepherd under the stars.",
-    duration: '20:00',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDn7YyX53p75wkK-vRcyrDabmBVW9dZLR8W2x1WP7gUa5VWubHGjYSaArzBpKErrzl17GosfPGWhr9qqd-UvhIGPX2zzF2bd-8jC8BYG4IZd65obr6FRukf23MgybGiD3PZNBoPeDamcHHy28DAaHLZmtzW2UeoCdb09q251tkB-FMfEPoQSejz9ssL-d1sFbgF7rcWIr0T9jJIUa2huMH5NsjSkkt1YD_WTNmyh0xRy7iJdSr-KN-AX1VgPJ5eYzdjLBAOjCMqLy3d',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-  },
-  {
-    id: '4',
-    title: "Daniel in the Lion's Den",
-    type: 'Bible Story',
-    category: 'Prophets',
-    subtitle: 'Faith and protection in the face of danger',
-    duration: '18:00',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDXfM_9erAUPZLERrsVnu_s1XFy19lCEyY44NeicKwbq8HOdgtxUXh5MisJzi9QuEVjXNBudmEnOfm-XMnlUM5mDTJa6cVwWLxZHWP6uLAV16OITQKibOxzCzSSucj7b7-2sUrxZtK_pK4NUQgPXahKDYZ--R5n76tkXeW6Hnj3bphCv1rbUlVSHT0EADSSPubKEmV5_GjAM5SZz2WdL0CSRxPy951Nng5Gk_fFVAllVZCJZIS9L2ANrbTsgmCSLXeJhfzPA8d-C_G0',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
-  },
-];
-
-const popularStories = [...newReleases].reverse();
 const RECENTLY_PLAYED_KEY = 'recentlyPlayedList';
 const MAX_RECENTLY_PLAYED = 10;
 
@@ -90,6 +44,9 @@ const Home = () => {
   const router = useRouter();
   const [isModalVisible, setModalVisible] = useState(false);
   const [recentlyPlayedItems, setRecentlyPlayedItems] = useState([]);
+  const [newReleases, setNewReleases] = useState([]);
+  const [popularStories, setPopularStories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const story = {
     id: 'hero-story-prodigal-son',
@@ -109,13 +66,9 @@ const Home = () => {
       const existingItems = await AsyncStorage.getItem(RECENTLY_PLAYED_KEY);
       let items = existingItems ? JSON.parse(existingItems) : [];
       
-      // Remove existing item if it's already in the list to avoid duplicates
       items = items.filter(i => i.id !== item.id);
-
-      // Add the new item to the beginning of the list
       items.unshift(item);
 
-      // Limit the number of recently played items
       if (items.length > MAX_RECENTLY_PLAYED) {
         items = items.slice(0, MAX_RECENTLY_PLAYED);
       }
@@ -136,6 +89,40 @@ const Home = () => {
     } catch (error) {
       console.error("Failed to load recently played items.", error);
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      const db = getFirestore();
+      const storiesRef = collection(db, 'stories');
+      const sleepStoriesRef = collection(db, 'sleepstories');
+
+      const qStories = query(storiesRef, orderBy('createdAt', 'desc'), limit(10));
+      const qSleepStories = query(sleepStoriesRef, orderBy('createdAt', 'desc'), limit(10));
+
+      try {
+        const [storySnapshot, sleepStorySnapshot] = await Promise.all([
+          getDocs(qStories),
+          getDocs(qSleepStories),
+        ]);
+
+        const storyList = storySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const sleepStoryList = sleepStorySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        const combined = [...storyList, ...sleepStoryList];
+        combined.sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate());
+        
+        const releases = combined.slice(0, 10);
+        setNewReleases(releases);
+        setPopularStories([...releases].reverse());
+      } catch (error) {
+        console.error("Error fetching stories: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStories();
   }, []);
 
   useFocusEffect(
@@ -227,16 +214,20 @@ const Home = () => {
             <Text style={styles.suggestStoryButtonText}>Suggest story</Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={newReleases}
-          renderItem={({ item }) => (
-            <StoryCard item={item} onPress={() => handlePress(item)} />
-          )}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color={COLORS.primaryAccent} style={{ marginVertical: 20 }}/>
+        ) : (
+          <FlatList
+            data={newReleases}
+            renderItem={({ item }) => (
+              <StoryCard item={item} onPress={() => handlePress(item)} />
+            )}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
+          />
+        )}
         <View style={{ paddingHorizontal: 16 }}>
           <Text style={styles.sectionTitle}>Popular Stories</Text>
         </View>
