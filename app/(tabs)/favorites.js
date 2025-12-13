@@ -1,37 +1,76 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import COLORS from '../../constants/colors';
 import { useRouter } from 'expo-router';
-
-const favoritesData = [
-  {
-    id: '1',
-    title: 'Morning Gratitude Meditation',
-    duration: '5 min',
-    author: 'Sarah Jennings',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFUbOI3wngr5j3UeyoqqzBquEuvFVQRfJ-CYeSYmNJAnGnQJRAwoKeJIPUxbKaGBnggNXoEJDF5Hot-jpxtuXZYb-qjETk2FkdM9eLxoQQJ4_d0zIzPx9QdLMds-0cklKo6rGR1BKsfbhbSRt7-aiVKvZ67P-oiS7DGyKJ7yYva7bZoDx-rowQCbl_dziSzOlf0nffyFSPowlICLlUGNAyjjtbA7V06ZLy6_BcKfg5byjDDnWbOY-eNdDHEmKVeLrWXeZf4XyRbbcm',
-  },
-  {
-    id: '2',
-    title: 'The Serenity Prayer',
-    duration: '2 min',
-    author: 'Audio Prayer',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD6DRoLUqNUH45Ty8eL6-5idDiJ5yYoY_GDSqvYlg_JrJ5jqO9R_3JyIP1fAZFZ-XrwaJ5B9IxanS0mbAYIIF76KdqmrNptchGJmwmJadcB6TGpeMZ4V1HeiblBY4uwgyXUUZAA88g5KgxNTHXqfxPbfEuOnfyj9y_R3_c3oI1_-5A-A_dJZI8esEN7i5SNSbXrrk81TzhlCLqOkO_Ux8SHpXlrlAQTkunn8tHWwBnE8BArl6tJvG1Pu0fClTj7qkaM0T2-uGFjar4p',
-  },
-  {
-    id: '3',
-    title: 'Peaceful Evening Reflections',
-    duration: '15 min',
-    author: 'Sleep Meditation',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA6iw1IXmGAw30y1xEX24H6U14suk_e0TlxhULfd2xsRXmNJAnGnQJRAwoKeJIPUxbKaGBnggNXoEJDF5Hot-jpxtuXZYb-qjETk2FkdM9eLxoQQJ4_d0zIzPx9QdLMds-0cklKo6rGR1BKsfbhbSRt7-aiVKvZ67P-oiS7DGyKJ7yYva7bZoDx-rowQCbl_dziSzOlf0nffyFSPowlICLlUGNAyjjtbA7V06ZLy6_BcKfg5byjDDnWbOY-eNdDHEmKVeLrWXeZf4XyRbbcm',
-  },
-];
+import { useFavorites } from '../../context/FavoritesProvider';
 
 const FavoritesScreen = () => {
   const [activeFilter, setActiveFilter] = React.useState('All');
-  const filters = ['All', 'Prayers', 'Meditations', 'Music', 'Courses', 'Scripture'];
   const router = useRouter();
+  const { favorites, loading, removeFavorite } = useFavorites();
+
+  const uniqueTypes = useMemo(() => {
+    const types = new Set(favorites.map(item => item.type).filter(Boolean));
+    return ['All', ...Array.from(types)];
+  }, [favorites]);
+
+  const filteredFavorites = useMemo(() => {
+    if (activeFilter === 'All') {
+      return favorites;
+    }
+    return favorites.filter(item => item.type === activeFilter);
+  }, [favorites, activeFilter]);
+
+  const handlePlay = (track) => {
+    router.push({ pathname: '/player', params: track });
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return <ActivityIndicator size="large" color={COLORS.accent} style={{ marginTop: 50 }} />;
+    }
+
+    if (favorites.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Your favorites list is empty.</Text>
+          <Text style={styles.emptySubText}>Tap the heart icon on any track to add it here.</Text>
+        </View>
+      );
+    }
+
+    if (filteredFavorites.length === 0 && activeFilter !== 'All') {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No {activeFilter} favorites found.</Text>
+          <Text style={styles.emptySubText}>Try selecting another filter or add more favorites.</Text>
+        </View>
+      );
+    }
+
+    return (
+      <ScrollView>
+        {filteredFavorites.map((item, index) => (
+          <View key={`${item.id}-${index}`} style={styles.listItem}>
+            <Image source={{ uri: item.image }} style={styles.listItemImage} />
+            <View style={styles.listItemTextContainer}>
+              <Text style={styles.listItemTitle}>{item.title}</Text>
+              <Text style={styles.listItemSubtitle}>{`${item.duration || 'N/A'} • ${item.author || 'Unknown'}`}</Text>
+            </View>
+            <View style={styles.listItemActions}>
+              <TouchableOpacity style={styles.playButton} onPress={() => handlePlay(item)}>
+                <Ionicons name="play" size={24} color={COLORS.primaryButtonText} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => removeFavorite(item.id)}>
+                <Ionicons name="heart" size={24} color={COLORS.primaryAccent} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -52,7 +91,7 @@ const FavoritesScreen = () => {
       </View>
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filtersContainer}>
-          {filters.map((filter) => (
+          {uniqueTypes.map((filter) => (
             <TouchableOpacity
               key={filter}
               style={[
@@ -82,25 +121,7 @@ const FavoritesScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <ScrollView>
-        {favoritesData.map((item) => (
-          <View key={item.id} style={styles.listItem}>
-            <Image source={{ uri: item.image }} style={styles.listItemImage} />
-            <View style={styles.listItemTextContainer}>
-              <Text style={styles.listItemTitle}>{item.title}</Text>
-              <Text style={styles.listItemSubtitle}>{`${item.duration} • ${item.author}`}</Text>
-            </View>
-            <View style={styles.listItemActions}>
-              <TouchableOpacity style={styles.playButton}>
-                <Ionicons name="play" size={24} color={COLORS.primaryButtonText} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Ionicons name="heart" size={24} color={COLORS.primaryAccent} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+      {renderContent()}
     </View>
   );
 };
@@ -230,6 +251,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  emptyText: {
+    color: COLORS.textPrimary,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  emptySubText: {
+    color: COLORS.textSecondary,
+    fontSize: 14,
+    marginTop: 8,
+    textAlign: 'center',
+    paddingHorizontal: 40,
   },
 });
 

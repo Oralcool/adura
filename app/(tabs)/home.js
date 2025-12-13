@@ -15,7 +15,7 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import React, { useState, useEffect, useCallback } from 'react';
 import SuggestStoryModal from '../../components/SuggestStoryModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getFirestore, collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, query, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 
 const RECENTLY_PLAYED_KEY = 'recentlyPlayedList';
 const MAX_RECENTLY_PLAYED = 10;
@@ -45,21 +45,8 @@ const Home = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [recentlyPlayedItems, setRecentlyPlayedItems] = useState([]);
   const [newReleases, setNewReleases] = useState([]);
-  const [popularStories, setPopularStories] = useState([]);
+  const [storyOfTheDay, setStoryOfTheDay] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const story = {
-    id: 'hero-story-prodigal-son',
-    title: 'Journey of Faith: The Prodigal Son',
-    subtitle:
-      'Rediscover forgiveness and unconditional love in this timeless parable.',
-    type: 'Bible Story',
-    category: "Jesus' Teachings",
-    duration: '14:00',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDGQPujiMucgSOVAAfKv_02V_Hw3bOOVwPzOe7815xV9H34cDGEkG2bZqoH08S8Q4WFp_kitO2iiSadlubdy0_iHHpdD_V4fv8Y2fi8bGBYJAKyjiPiIHJUmN0C2AJgpgS_JWBBAnxtaktTt7uZJJsfjhYQPSe02dboHu11FFOhQVyw9JdSp2XXE3Pde07LcofTZwR2mmigsKybDrEkBCKX7fOf65t-M9pOWApsqHXezu5eH6IyCBTMpInCVoE6UoM_zNGUggixYJiA',
-    audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
-  };
 
   const addRecentlyPlayedItem = async (item) => {
     try {
@@ -92,15 +79,16 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const fetchStories = async () => {
+    const fetchInitialData = async () => {
       const db = getFirestore();
-      const storiesRef = collection(db, 'stories');
-      const sleepStoriesRef = collection(db, 'sleepstories');
-
-      const qStories = query(storiesRef, orderBy('createdAt', 'desc'), limit(10));
-      const qSleepStories = query(sleepStoriesRef, orderBy('createdAt', 'desc'), limit(10));
-
+      
       try {
+        // Fetch New Releases
+        const storiesRef = collection(db, 'stories');
+        const sleepStoriesRef = collection(db, 'sleepstories');
+        const qStories = query(storiesRef, orderBy('createdAt', 'desc'), limit(10));
+        const qSleepStories = query(sleepStoriesRef, orderBy('createdAt', 'desc'), limit(10));
+
         const [storySnapshot, sleepStorySnapshot] = await Promise.all([
           getDocs(qStories),
           getDocs(qSleepStories),
@@ -114,15 +102,30 @@ const Home = () => {
         
         const releases = combined.slice(0, 10);
         setNewReleases(releases);
-        setPopularStories([...releases].reverse());
+
+        // Fetch Story of the Day
+        const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+        const dailyFeatureRef = doc(db, 'daily_features', today);
+        const dailyFeatureSnap = await getDoc(dailyFeatureRef);
+
+        if (dailyFeatureSnap.exists()) {
+          const { storyId, storyCollection } = dailyFeatureSnap.data();
+          if (storyId && storyCollection) {
+            const storyRef = doc(db, storyCollection, storyId);
+            const storySnap = await getDoc(storyRef);
+            if (storySnap.exists()) {
+              setStoryOfTheDay({ id: storySnap.id, ...storySnap.data() });
+            }
+          }
+        }
       } catch (error) {
-        console.error("Error fetching stories: ", error);
+        console.error("Error fetching initial data: ", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStories();
+    fetchInitialData();
   }, []);
 
   useFocusEffect(
@@ -132,6 +135,7 @@ const Home = () => {
   );
 
   const handlePress = (item) => {
+    if (!item) return;
     addRecentlyPlayedItem(item);
     router.push({
       pathname: '/player',
@@ -160,26 +164,32 @@ const Home = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.cardContainer}>
-          <ImageBackground
-            source={{
-              uri: story.image,
-            }}
-            style={styles.heroCard}
-            imageStyle={styles.heroImage}
-          >
-            <View style={styles.heroContent}>
-              <View>
-                <Text style={styles.heroTitle}>{story.title}</Text>
-                <Text style={styles.heroSubtitle}>{story.subtitle}</Text>
+          {loading ? (
+            <ActivityIndicator size="large" color={COLORS.primaryAccent} style={styles.heroCard} />
+          ) : storyOfTheDay ? (
+            <ImageBackground
+              source={{ uri: storyOfTheDay.image }}
+              style={styles.heroCard}
+              imageStyle={styles.heroImage}
+            >
+              <View style={styles.heroContent}>
+                <View>
+                  <Text style={styles.heroTitle}>{storyOfTheDay.title}</Text>
+                  <Text style={styles.heroSubtitle}>{storyOfTheDay.subtitle}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.beginButton}
+                  onPress={() => handlePress(storyOfTheDay)}
+                >
+                  <Text style={styles.beginButtonText}>Listen Now</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={styles.beginButton}
-                onPress={() => handlePress(story)}
-              >
-                <Text style={styles.beginButtonText}>Listen Now</Text>
-              </TouchableOpacity>
+            </ImageBackground>
+          ) : (
+            <View style={[styles.heroCard, styles.fallbackHero]}>
+                <Text style={styles.fallbackHeroText}>No story of the day. Check back tomorrow!</Text>
             </View>
-          </ImageBackground>
+          )}
         </View>
         <View style={{ paddingHorizontal: 16 }}>
           <Text style={styles.sectionTitle}>Recently Played</Text>
@@ -228,19 +238,6 @@ const Home = () => {
             contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
           />
         )}
-        <View style={{ paddingHorizontal: 16 }}>
-          <Text style={styles.sectionTitle}>Popular Stories</Text>
-        </View>
-        <FlatList
-          data={popularStories}
-          renderItem={({ item }) => (
-            <StoryCard item={item} onPress={() => handlePress(item)} />
-          )}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 8 }}
-        />
         <View style={{ paddingHorizontal: 16 }}>
           <Text style={styles.sectionTitle}>Verse of the Day</Text>
         </View>
@@ -425,6 +422,18 @@ const styles = StyleSheet.create({
     color: COLORS.primaryButtonText,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  fallbackHero: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.secondaryBg,
+  },
+  fallbackHeroText: {
+    color: COLORS.textSecondary,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
 });
 

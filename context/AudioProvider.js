@@ -12,6 +12,12 @@ export const AudioProvider = ({ children }) => {
   });
   const status = useAudioPlayerStatus(player);
 
+  const toggleMute = () => {
+    if (player) {
+      player.muted = !player.muted;
+    }
+  };
+
   const loadTrack = (track) => {
     setCurrentTrack(track);
     if (track && track.audio) {
@@ -31,6 +37,8 @@ export const AudioProvider = ({ children }) => {
     currentTrack,
     loadTrack,
     unloadTrack,
+    toggleMute,
+    isMuted: player.muted,
   };
 
   return (

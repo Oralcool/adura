@@ -6,11 +6,15 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import Slider from '@react-native-community/slider';
 import COLORS from '../constants/colors';
 import { useAudio } from '../context/AudioProvider';
+import { useFavorites } from '../context/FavoritesProvider';
 
 const PlayerScreen = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { status, player, loadTrack, currentTrack } = useAudio();
+  const { status, player, loadTrack, currentTrack, toggleMute, isMuted } = useAudio();
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+
+  const isTrackFavorite = currentTrack ? isFavorite(currentTrack.id) : false;
 
   useEffect(() => {
     // If there's a track in the params and it's different from the current one, load it.
@@ -24,6 +28,15 @@ const PlayerScreen = () => {
       player.pause();
     } else {
       player.play();
+    }
+  };
+
+  const handleToggleFavorite = () => {
+    if (!currentTrack) return;
+    if (isTrackFavorite) {
+      removeFavorite(currentTrack.id);
+    } else {
+      addFavorite(currentTrack);
     }
   };
 
@@ -79,8 +92,8 @@ const PlayerScreen = () => {
             value={status.currentTime}
             maximumValue={status.duration}
             onSlidingComplete={(value) => player.seekTo(value)}
-            minimumTrackTintColor="#E4B47C"
-            maximumTrackTintColor="rgba(245, 245, 245, 0.2)"
+            minimumTrackTintColor="#D4AF37"
+            maximumTrackTintColor="#2E3A4A"
             thumbTintColor="white"
           />
           <View style={styles.timeContainer}>
@@ -90,6 +103,9 @@ const PlayerScreen = () => {
         </View>
 
         <View style={styles.controlsContainer}>
+          <TouchableOpacity onPress={handleToggleFavorite}>
+            <Ionicons name={isTrackFavorite ? 'heart' : 'heart-outline'} size={36} color={isTrackFavorite ? COLORS.primaryAccent : COLORS.textPrimary} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => player.seekTo(status.currentTime - 10)}>
             <Ionicons name="play-back" size={36} color={COLORS.textPrimary} />
           </TouchableOpacity>
@@ -103,31 +119,14 @@ const PlayerScreen = () => {
           <TouchableOpacity onPress={() => player.seekTo(status.currentTime + 30)}>
             <Ionicons name="play-forward" size={36} color={COLORS.textPrimary} />
           </TouchableOpacity>
-        </View>
-
-        <View style={styles.secondaryControls}>
-          <TouchableOpacity>
-            <Ionicons name="heart-outline" size={28} color={COLORS.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="add-circle-outline" size={28} color={COLORS.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="download-outline" size={28} color={COLORS.textPrimary} />
+          <TouchableOpacity onPress={toggleMute}>
+            <Ionicons name={isMuted ? "volume-mute" : "volume-high"} size={36} color={COLORS.textPrimary} />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.customizationControls}>
-          <TouchableOpacity style={styles.customButton}>
-            <Ionicons name="moon-outline" size={20} color={COLORS.textPrimary} />
-            <Text style={styles.customButtonText}>Sleep Mode</Text>
-          </TouchableOpacity>
-          <View style={styles.divider} />
-          <TouchableOpacity style={styles.customButton}>
-            <Ionicons name="musical-notes-outline" size={20} color={COLORS.textPrimary} />
-            <Text style={styles.customButtonText}>Background Sound</Text>
-          </TouchableOpacity>
-        </View>
+
+
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -186,57 +185,26 @@ const styles = StyleSheet.create({
     marginTop: -8, // Adjusted to align with slider visual
   },
   timeText: {
-    color: 'rgba(245, 245, 245, 0.6)',
+    color: COLORS.mediaTimeLabels,
     fontSize: 12,
   },
   controlsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 32,
+    justifyContent: 'space-between',
+    width: '100%',
     marginTop: 24,
   },
   playPauseButton: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#E4B47C',
+    backgroundColor: COLORS.mediaPlayButton,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  secondaryControls: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '80%',
-    marginTop: 24,
-  },
-  customizationControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(245, 245, 245, 0.1)',
-    borderRadius: 999,
-    padding: 8,
-    marginTop: 32,
-    marginBottom: 16,
-  },
-  customButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 12,
-  },
-  customButtonText: {
-    color: COLORS.textPrimary,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  divider: {
-    width: 1,
-    height: 24,
-    backgroundColor: 'rgba(245, 245, 245, 0.2)',
-  },
+
+
 });
 
 export default PlayerScreen;
